@@ -1,0 +1,58 @@
+[project]
+name = "pyladoc"
+version = "1.0.0"
+authors = [
+  { name="Nicolas Kruse", email="nicolas.kruse@nonan.net" },
+]
+description = "Package for generating HTML and PDF/latex from python code"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "markdown>=3.3.0",
+    "beautifulsoup4>=4.9.1"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest", "flake8", "mypy",
+    "lxml", "types-lxml",
+    "requests",
+    "matplotlib>=3.1.1",
+    "pandas>=2.0.0", "Jinja2",
+]
+
+[project.urls]
+Homepage = "https://github.com/Nonannet/pyladoc"
+Repository = "https://github.com/Nonannet/pyladoc"
+Issues = "https://github.com/Nonannet/pyladoc/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pyladoc = ["templates/*"]
+
+
+[tool.mypy]
+files = ["src"]
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+check_untyped_defs = true
+no_implicit_optional = true
+show_error_codes = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,0 +1,44 @@
+<p>Below is an in-depth explanation of the AArch64 (ARM64)
+unconditional branch instruction—often simply called the
+“B” instruction—and how its 26‐bit immediate field (imm26)
+is laid out and later relocated during linking.</p>
+<hr>
+<h2>Instruction Layout</h2>
+<p>The unconditional branch in AArch64 is encoded in a 32‑bit
+instruction. Its layout is as follows:</p>
+<pre><code>Bits:  31         26 25                           0
+        +-------------+------------------------------+
+        |  Opcode     |          imm26               |
+        +-------------+------------------------------+
+</code></pre>
+<ul>
+<li><strong>Opcode (bits 31:26):</strong></li>
+<li>For a plain branch (<code>B</code>), the opcode is <code>000101</code>.</li>
+<li>
+<p>For a branch with link (<code>BL</code>), which saves the return
+address (i.e., a call), the opcode is <code>100101</code>.
+These 6 bits determine the instruction type.</p>
+</li>
+<li>
+<p><strong>Immediate Field (imm26, bits 25:0):</strong></p>
+</li>
+<li>This 26‑bit field holds a signed immediate value.</li>
+<li>
+<p><strong>Offset Calculation:</strong> At runtime, the processor:</p>
+<ol>
+<li><strong>Shifts</strong> the 26‑bit immediate left by 2 bits.
+(Because instructions are 4-byte aligned,
+the two least-significant bits are always zero.)</li>
+<li><strong>Sign-extends</strong> the resulting 28‑bit value to
+the full register width (typically 64 bits).</li>
+<li><strong>Adds</strong> this value to the program counter
+(PC) to obtain the branch target.</li>
+</ol>
+</li>
+<li>
+<p><strong>Reach:</strong></p>
+</li>
+<li>With a 26‑bit signed field that’s effectively 28 bits
+  after the shift, the branch can cover a range
+  of approximately ±128&nbsp;MB from the current instruction.</li>
+</ul>
