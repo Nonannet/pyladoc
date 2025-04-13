@@ -6,7 +6,8 @@ import re
 import io
 from . import latex
 import pkgutil
-
+from html.parser import HTMLParser
+from io import StringIO
 
 HTML_OUTPUT = 0
 LATEX_OUTPUT = 1
@@ -53,23 +54,8 @@ def _get_pkgutil_string(path: str) -> str:
 
 def _markdown_to_html(text: str) -> str:
     prep_text = re.sub(r'\u00A0', '&nbsp;', text)  # non-breaking space
-    html = markdown.markdown(prep_text, extensions=['tables', 'fenced_code', 'def_list', 'abbr', 'sane_lists'])
-    return html.replace('<hr />', '<hr>')
-
-
-def escape_html(text: str) -> str:
-    """
-    Escapes special HTML characters in a given string.
-
-    Args:
-        text: The text to escape
-
-    Returns:
-        Escaped text save for inserting into HTML code
-    """
-    ret = re.sub(r'\u00A0', '&nbsp;', text)  # non-breaking space
-    ret = html.escape(ret)
-    return ' '.join(ret.strip().splitlines())
+    html_text = markdown.markdown(prep_text, extensions=['tables', 'fenced_code', 'def_list', 'abbr', 'sane_lists'])
+    return html_text
 
 
 def _clean_svg(svg_text: str) -> str:
@@ -138,6 +124,21 @@ def _save_figure(fig: Figure, buff: io.BytesIO, figure_format: FFormat, font_fam
         e.set_fontfamily(s)
 
     fig.set_size_inches(old_size, None, False)
+
+
+def escape_html(text: str) -> str:
+    """
+    Escapes special HTML characters in a given string.
+
+    Args:
+        text: The text to escape
+
+    Returns:
+        Escaped text save for inserting into HTML code
+    """
+    ret = re.sub(r'\u00A0', '&nbsp;', text)  # non-breaking space
+    ret = html.escape(ret)
+    return ' '.join(ret.strip().splitlines())
 
 
 def figure_to_string(fig: Figure,
@@ -305,6 +306,105 @@ class DocumentWriter():
         self._item_count[ref_type] = current_index
         return caption_prefix.format(current_index)
 
+    def _equation_embedding_reescaping(self, text: str) -> str:
+        """
+        Convert $$-escaping of LaTeX blocks and inline expressions
+        to a HTML-style format: <latex>...</latex>.
+        """
+        block_pattern = re.compile(
+            r'(^|\n)\s*\$\$\s*\n'         # start delimiter on a line on its own
+            r'(?P<content>.*?)'           # capture block content non-greedily
+            r'\n\s*\$\$\s*(\n|$)',        # end delimiter on a line on its own
+            re.DOTALL | re.MULTILINE
+        )
+
+        def block_repl(match: re.Match[str]) -> str:
+            content = match.group("content").strip()
+            latex_label: str = ''
+
+            label_pattern = re.compile(r'^\\label\{([^}]+)\}\s*\n?')
+            label_match = label_pattern.match(content)
+            if label_match:
+                latex_label = label_match.group(1)
+                # Remove the label command from the content.
+                content = content[label_match.end():].lstrip()
+
+            if latex_label and ':' in latex_label:
+                parts = latex_label.split(':')
+                ref_type = parts[0]
+                ref_id = parts[1]
+                caption = self._add_item(ref_id, ref_type, '({})')
+                return (f'\n<latex type="block" ref_type="{ref_type}"'
+                        f' ref_id="{ref_id}" caption="{caption}">{content}</latex>\n')
+            else:
+                return f'\n<latex type="block">{content}</latex>\n'
+
+        result = block_pattern.sub(block_repl, text)
+
+        inline_pattern = re.compile(r'\$\$(.+?)\$\$')
+
+        def inline_repl(match: re.Match[str]) -> str:
+            content = match.group(1)
+            return f'<latex>{content}</latex>'
+
+        return inline_pattern.sub(inline_repl, result)
+
+    def _get_equation_html(self, latex_equation: str, caption: str, block: bool = False) -> str:
+        fig = latex_to_figure(latex_equation)
+        if block:
+            ret = ('<div class="equation-container">'
+                   '<div class="equation">%s</div>'
+                   '<div class="equation-number">%s</div></div>') % (
+                        figure_to_string(fig, self._figure_format, base64=self._base64_svgs),
+                        caption)
+        else:
+            ret = '<span class="inline-equation">' + figure_to_string(fig, self._figure_format, base64=self._base64_svgs) + '</span>'
+
+        plt.close(fig)
+        return ret
+
+    def _html_post_processing(self, html_code: str) -> str:
+        """
+        """
+        class HTMLPostProcessor(HTMLParser):
+            def __init__(self, document_writer: 'DocumentWriter') -> None:
+                super().__init__()
+                self.modified_html = StringIO()
+                self.in_latex: bool = False
+                self.eq_caption: str = ''
+                self.block: bool = False
+                self.dw = document_writer
+
+            def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+                if tag == 'hr':
+                    self.modified_html.write(f"<{tag}>")
+                elif tag == 'latex':
+                    self.in_latex = True
+                    attr_dict = {k: v if v else '' for k, v in attrs}
+                    self.eq_caption = attr_dict.get('caption', '')
+                    self.block = attr_dict.get('type') == 'block'
+                elif not self.in_latex:
+                    tag_text = self.get_starttag_text()
+                    if tag_text:
+                        self.modified_html.write(tag_text)
+
+            def handle_data(self, data: str) -> None:
+                if self.in_latex:
+                    self.modified_html.write(
+                        self.dw._get_equation_html(data, self.eq_caption, self.block))
+                else:
+                    self.modified_html.write(data)
+
+            def handle_endtag(self, tag: str) -> None:
+                if tag == 'latex':
+                    self.in_latex = False
+                else:
+                    self.modified_html.write(f"</{tag}>")
+
+        parser = HTMLPostProcessor(self)
+        parser.feed(html_code)
+        return parser.modified_html.getvalue()
+
     def new_field(self, name: str) -> 'DocumentWriter':
         new_dwr = _create_document_writer()
         self._fields[name] = new_dwr
@@ -318,7 +418,7 @@ class DocumentWriter():
                     centered: bool = True) -> None:
         """
         Adds a diagram to the document.
-        
+
         Args:
             fig: The figure to add (matplotlib figure)
             caption: The caption for the figure
@@ -329,14 +429,15 @@ class DocumentWriter():
                 has an individual numbering
             centered: Whether to center the figure in LaTeX output
         """
-        caption_prefix = self._add_item(ref_id, ref_type, prefix_pattern)
-
+        
         def render_to_html() -> str:
+            caption_prefix = self._add_item(ref_id, ref_type, prefix_pattern)
             return '<div class="figure">%s%s</div>' % (
                 figure_to_string(fig, self._figure_format, base64=self._base64_svgs, scale=self._fig_scale),
                 '<br>' + caption_prefix + escape_html(caption) if caption else '')
 
         def render_to_latex() -> str:
+            self._add_item(ref_id, ref_type, prefix_pattern)
             return '\\begin{figure}%s\n%s\n\\caption{%s}\n%s\\end{figure}' % (
                 '\n\\centering' if centered else '',
                 figure_to_string(fig, 'pgf', self._font_family, scale=self._fig_scale),
@@ -361,25 +462,27 @@ class DocumentWriter():
             centered: Whether to center the table in LaTeX output
         """
         assert Table and isinstance(table, Table), 'Table has to be a pandas DataFrame oder DataFrame Styler'
-        caption_prefix = self._add_item(ref_id, ref_type, prefix_pattern)
         styler = table if isinstance(table, Styler) else getattr(table, 'style', None)
         assert isinstance(styler, Styler), 'Jinja2 package is required for rendering tables'
 
         def render_to_html() -> str:
+            caption_prefix = self._add_item(ref_id, ref_type, prefix_pattern)
             html_string = styler.to_html(table_uuid=ref_id, caption=caption_prefix + escape_html(caption))
             return re.sub(r'<style.*?>.*?</style>', '', html_string, flags=re.DOTALL)
 
         def render_to_latex() -> str:
+            self._add_item(ref_id, ref_type, prefix_pattern)
+            ref_label = latex.normalize_label_text(ref_type + ':' + ref_id)
             if self._table_renderer == 'pandas':
                 return styler.to_latex(
-                    label=latex.normalize_label_text(ref_type + ':' + ref_id),
+                    label=ref_label,
                     hrules=True,
                     convert_css=True,
                     siunitx=True,
                     caption=latex.escape_text(caption),
                     position_float='centering' if centered else None)
             else:
-                return latex.render_pandas_styler_table(styler, caption, ref_type + ':' + ref_id, centered)
+                return latex.render_pandas_styler_table(styler, caption, ref_label, centered)
 
         self._doc.append([render_to_html, render_to_latex])
 
@@ -476,21 +579,14 @@ class DocumentWriter():
             ref_id: If provided, the equation is displayed with
                 a number and can be referenced by the ref_id
         """
-        caption = self._add_item(ref_id, ref_type, '({})')
 
         def render_to_html() -> str:
-            fig = latex_to_figure(latex_equation)
-            return ('<div class="equation-container"><div class="equation">%s</div>'
-                   '<div class="equation-number">%s</div></div>') % (
-                    figure_to_string(fig, self._figure_format, base64=self._base64_svgs),
-                    caption)
+            caption = self._add_item(ref_id, ref_type, '({})')
+            return self._get_equation_html(latex_equation, caption)
 
         def render_to_latex() -> str:
-            if ref_id:
-                return '\\begin{equation}\\label{%s:%s}%s\\end{equation}' % (
-                    ref_type, ref_id, latex_equation)
-            else:
-                return '\\[%s\\]' % latex_equation
+            self._add_item(ref_id, ref_type, '')
+            return latex.get_equation_code(latex_equation, ref_type, ref_id)
 
         self._doc.append([render_to_html, render_to_latex])
 
@@ -505,14 +601,16 @@ class DocumentWriter():
         norm_text = _normalize_text_indent(str(text))
 
         def render_to_html() -> str:
-            html = _markdown_to_html(norm_text)
+            html = self._html_post_processing(_markdown_to_html(self._equation_embedding_reescaping(norm_text)))
             if section_class:
                 return '<div class="' + section_class + '">' + html + '</div>'
             else:
                 return html
 
         def render_to_latex() -> str:
-            return latex.from_html(render_to_html())
+            html = _markdown_to_html(
+                self._equation_embedding_reescaping(norm_text))
+            return latex.from_html(html)
 
         self._doc.append([render_to_html, render_to_latex])
 

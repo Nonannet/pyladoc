@@ -1,6 +1,5 @@
-import bs4
 from html.parser import HTMLParser
-from typing import Iterator, Generator, Any
+from typing import Generator, Any
 from pandas.io.formats.style import Styler
 import re
 import os
@@ -72,7 +71,7 @@ def escape_text(text: str) -> str:
     for m in re.finditer(regex_filter, text):
         s1, s2 = m.span()
         ret.append(text[last_s:s1])
-        matches = [v for k, v in LaTeX_translation.items() if re.match(k, m.group())]
+        matches = [v for k, v in latex_translation.items() if re.match(k, m.group())]
         if m.group(1):
             ret.append(matches[0].replace(r'\g<1>', normalize_label_text(m.group(1))))
         else:
@@ -81,6 +80,25 @@ def escape_text(text: str) -> str:
     ret.append(text[last_s:])
 
     return ''.join(ret)
+
+
+def get_equation_code(equation: str, ref_id: str, ref_type: str, block: bool = False) -> str:
+    """
+    Converts an equation string to LaTeX code.
+
+    Args:
+        equation: The LaTeX equation string.
+        ref_id: The reference ID for the equation.
+        ref_type: The type of reference (e.g., 'eq', 'fig', etc.).
+    """
+    if block:
+        if ref_id:
+            return '\\begin{equation}\\label{%s:%s}%s\\end{equation}' % (
+                normalize_label_text(ref_type), normalize_label_text(ref_id), equation)
+        else:
+            return '\\[%s\\]' % equation
+    else:
+        return '\\(%s\\)' % equation
 
 
 def render_pandas_styler_table(df_style: Styler, caption: str = '', label: str = '', centering: bool = True) -> str:
@@ -132,63 +150,6 @@ def render_pandas_styler_table(df_style: Styler, caption: str = '', label: str =
     return ''.join(str_list)
 
 
-def from_html_old(html_code: str) -> str:
-    """
-    Converts HTML code to LaTeX code.
-
-    Args:
-        html_code: The HTML code to convert.
-
-    Returns:
-        The LaTeX code.
-    """
-    root = bs4.BeautifulSoup(html_code, 'html.parser')
-
-    html_to_latex = {
-        'strong': ('\\textbf{', '}'),
-        'b': ('\\textbf{', '}'),
-        'em': ('\\emph{', '}'),
-        'i': ('\\emph{', '}'),
-        'p': ('', '\n\n'),
-        'h1': ('\\section{', '}'),
-        'h2': ('\\subsection{', '}'),
-        'h3': ('\\subsubsection{', '}'),
-        'ul': ('\\begin{itemize}', '\\end{itemize}'),
-        'ol': ('\\begin{enumerate}', '\\end{enumerate}'),
-        'li': ('\\item ', ''),
-        'latex_eq': ('\\[', '\\]'),
-    }
-
-    def handle_table(table: bs4.element.Tag) -> str:
-        rows = table.find_all('tr')
-        latex_table: str = ''
-        for row in rows:
-            assert isinstance(row, bs4.element.Tag), 'HTML table not valid'
-            cells = row.find_all(['th', 'td'])
-            if not latex_table:
-                latex_table = "\\begin{tabular}{|" + "|".join(['l'] * len(cells)) + "|}\\toprule\n"
-            else:
-                latex_table += " & ".join(escape_text(cell.get_text(strip=True)) for cell in cells) + " \\\\\n"
-        latex_table += "\\bottomrule\n\\end{tabular}"
-        return latex_table
-
-    def parse_node(element: bs4.element.Tag) -> Iterator[str]:
-        prefix, post = html_to_latex.get(element.name, ('', ''))
-        yield prefix
-
-        for c in element.children:
-            if isinstance(c, bs4.element.Tag):
-                if c.name == 'table':
-                    yield handle_table(c)
-                else:
-                    yield from parse_node(c)
-            else:
-                yield escape_text(c.text)
-        yield post
-
-    return ''.join(parse_node(root))
-
-
 def from_html(html_code: str) -> str:
     """
     Converts HTML code to LaTeX code using HTMLParser.
@@ -221,8 +182,11 @@ def from_html(html_code: str) -> str:
             self.column_alignment = ''
             self.midrule_flag = False
             self.header_flag = False
+            self.attr_dict: dict[str, str] = {}
+            self.equation_flag = False
 
         def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+            self.attr_dict = {k: v if v else '' for k, v in attrs}
             if tag in html_to_latex:
                 prefix, _ = html_to_latex[tag]
                 self.latex_code.append(prefix)
@@ -234,15 +198,18 @@ def from_html(html_code: str) -> str:
             elif tag == 'tr':
                 self.column_alignment = ''
             elif tag in ['th', 'td']:
-                style = [v for k, v in attrs if k == 'style']
-                if style and style[0] and 'right' in style[0]:
+                if 'right' in self.attr_dict.get('style', ''):
                     self.column_alignment += 'r'
                 else:
                     self.column_alignment += 'l'
             elif tag == 'a':
-                href = [v for k, v in attrs if k == 'href']
+                href = self.attr_dict.get('href')
                 assert href, 'Link href attribute is missing'
-                self.latex_code.append(f"\\href{{{href[0]}}}{{")
+                self.latex_code.append(f"\\href{{{href}}}{{")
+            elif tag == 'hr':
+                self.latex_code.append("\n\n\\noindent\\rule[0.5ex]{\\linewidth}{1pt}\n\n")
+            elif tag == 'latex':
+                self.equation_flag = True
 
         def handle_endtag(self, tag: str) -> None:
             if tag in html_to_latex:
@@ -266,9 +233,16 @@ def from_html(html_code: str) -> str:
                 self.latex_code.append(" & ")
             elif tag == 'a':
                 self.latex_code.append("}")
+            elif tag == 'latex':
+                self.equation_flag = False
 
         def handle_data(self, data: str) -> None:
-            if data.strip():
+            if self.equation_flag:
+                block = self.attr_dict.get('type') == 'block'
+                ref_id = self.attr_dict.get('ref_id', '')
+                ref_type = self.attr_dict.get('ref_type', 'eq')
+                self.latex_code.append(get_equation_code(data, ref_id, ref_type, block))
+            elif data.strip():
                 self.latex_code.append(escape_text(data))
 
     parser = LaTeXHTMLParser()
