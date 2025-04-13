@@ -284,6 +284,9 @@ class DocumentWriter():
     A class to create a document for exporting to HTML or LaTeX.
     """
     def __init__(self) -> None:
+        """
+        Initializes the DocumentWriter instance.
+        """
         self._doc: list[list[Callable[[], str]]] = []
         self._fields: dict[str, DocumentWriter] = dict()
         self._base64_svgs: bool = False
@@ -313,6 +316,19 @@ class DocumentWriter():
     def add_diagram(self, fig: Figure, caption: str = '', ref_id: str = '',
                     prefix_pattern: str = 'Figure {}: ', ref_type: str = 'fig',
                     centered: bool = True) -> None:
+        """
+        Adds a diagram to the document.
+        
+        Args:
+            fig: The figure to add (matplotlib figure)
+            caption: The caption for the figure
+            ref_id: If provided, the figure can be referenced by this string
+            prefix_pattern: A custom string for the caption prefix, {} will
+                be replaced by the figure number
+            ref_type: The type of reference. Each type (e.g., 'fig', 'table')
+                has an individual numbering
+            centered: Whether to center the figure in LaTeX output
+        """
         caption_prefix = self._add_item(ref_id, ref_type, prefix_pattern)
 
         def render_to_html() -> str:
@@ -331,6 +347,19 @@ class DocumentWriter():
 
     def add_table(self, table: Table, caption: str = '', ref_id: str = '',
                   prefix_pattern: str = 'Table {}: ', ref_type: str = 'table', centered: bool = True) -> None:
+        """
+        Adds a table to the document.
+
+        Args:
+            table: The table to add (pandas DataFrame or Styler)
+            caption: The caption for the table
+            ref_id: If provided, the table can be referenced by this string
+            prefix_pattern: A custom string for the caption prefix, {} will
+                be replaced by the table number
+            ref_type: The type of reference. Each type (e.g., 'fig', 'table')
+                has an individual numbering
+            centered: Whether to center the table in LaTeX output
+        """
         assert Table and isinstance(table, Table), 'Table has to be a pandas DataFrame oder DataFrame Styler'
         caption_prefix = self._add_item(ref_id, ref_type, prefix_pattern)
         styler = table if isinstance(table, Styler) else getattr(table, 'style', None)
@@ -545,7 +574,7 @@ class DocumentWriter():
                 If no path is provided a default template is used.
 
         Returns:
-            True if the PDF was successfully created
+            True if the PDF file was successfully created
         """
         latex_code = inject_to_template(self.to_latex(font_family, table_renderer),
                                         latex_template_path,
