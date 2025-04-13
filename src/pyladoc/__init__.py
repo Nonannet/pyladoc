@@ -1,4 +1,4 @@
-from typing import Callable, Generator, Self, Literal, TYPE_CHECKING
+from typing import Callable, Generator, Literal, TYPE_CHECKING
 import html
 import markdown
 from base64 import b64encode
@@ -307,7 +307,7 @@ class DocumentWriter():
         self._fields[name] = new_dwr
         return new_dwr
 
-    def add_document(self, doc: Self) -> None:
+    def add_document(self, doc: 'DocumentWriter') -> None:
         self._doc += doc._doc
 
     def add_diagram(self, fig: Figure, caption: str = '', ref_id: str = '',
