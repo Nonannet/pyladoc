@@ -8,9 +8,9 @@ WRITE_RESULT_FILES = True
 
 
 def make_document():
-    dw = pyladoc.DocumentWriter()
+    doc = pyladoc.DocumentWriter()
 
-    dw.add_markdown("""
+    doc.add_markdown("""
     # Special characters
 
     ö ä ü Ö Ä Ü ß @ ∆
@@ -20,9 +20,9 @@ def make_document():
     £ ¥ $ €
 
     Œ
-                    
+
     # Link
-                    
+
     This is a hyperlink: [nonan.net](https://www.nonan.net)
 
     # Table
@@ -42,15 +42,15 @@ def make_document():
     |  3  | KL3202   | PT100 2 Temperatureingänge (3-Leiter)
     |  1  | KL2404   | 4 Digitalausgänge
     |  2  | KL9010   | Endklemme
-    
+
     ---
 
     # Equations
-                    
+
     This line represents a reference to the equation @eq:test1.
     """)
 
-    dw.add_equation(r'y = a + b * \sum_{i=0}^{\infty} a_i x^i', 'test1')
+    doc.add_equation(r'y = a + b * \sum_{i=0}^{\infty} a_i x^i', 'test1')
 
     # Figure
     fig, ax = plt.subplots()
@@ -65,7 +65,7 @@ def make_document():
     ax.set_title('Fruit supply by kind and color')
     ax.legend(title='Fruit color')
 
-    dw.add_diagram(fig, 'Bar chart with individual bar colors')
+    doc.add_diagram(fig, 'Bar chart with individual bar colors')
 
     # Table
     mydataset = {
@@ -79,9 +79,9 @@ def make_document():
     }
     df = pd.DataFrame(mydataset)
 
-    dw.add_table(df.style.hide(axis="index"), 'This is a example table', 'example1')
+    doc.add_table(df.style.hide(axis="index"), 'This is a example table', 'example1')
 
-    return dw
+    return doc
 
 
 def test_html_render():
@@ -91,7 +91,7 @@ def test_html_render():
     document_validation.validate_html(html_code, VALIDATE_HTML_CODE_ONLINE)
 
     if WRITE_RESULT_FILES:
-        with open('tests/out/test_html_render.html', 'w', encoding='utf-8') as f:
+        with open('tests/out/test_html_render2.html', 'w', encoding='utf-8') as f:
             f.write(pyladoc.inject_to_template(html_code, internal_template='templates/test_template.html'))
 
 
@@ -100,7 +100,7 @@ def test_latex_render():
 
     # print(doc.to_latex())
 
-    assert doc.to_pdf('tests/out/test_latex_render.pdf', font_family='serif')
+    assert doc.to_pdf('tests/out/test_latex_render2.pdf', font_family='serif')
 
 
 if __name__ == '__main__':
