@@ -16,8 +16,8 @@ def basic_formatter(value: Any) -> str:
 
 def to_ascii(text: str) -> str:
     """
-    Replaces/escapes often used unicode characters in latex code or text
-    with its LaTex ascii equivalents.
+    Replaces/escapes often used unicode characters in LaTeX code or text
+    with its LaTeX ascii equivalents.
 
     Args:
         text: The text to convert.
@@ -72,7 +72,7 @@ def escape_text(text: str) -> str:
     for m in re.finditer(regex_filter, text):
         s1, s2 = m.span()
         ret.append(text[last_s:s1])
-        matches = [v for k, v in latex_translation.items() if re.match(k, m.group())]
+        matches = [v for k, v in LaTeX_translation.items() if re.match(k, m.group())]
         if m.group(1):
             ret.append(matches[0].replace(r'\g<1>', normalize_label_text(m.group(1))))
         else:

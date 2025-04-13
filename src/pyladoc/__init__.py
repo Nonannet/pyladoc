@@ -186,7 +186,7 @@ def figure_to_string(fig: Figure,
 
 
 def latex_to_figure(latex_code: str) -> Figure:
-    assert Figure, 'Matplotlib is required for rendering LaTex expressions for HTML output.'  # type:ignore[truthy-function]
+    assert Figure, 'Matplotlib is required for rendering LaTeX expressions for HTML output.'  # type:ignore[truthy-function]
     fig, ax = plt.subplots()
     ax.set_xticks([])
     ax.set_yticks([])
