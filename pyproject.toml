@@ -1,6 +1,6 @@
 [project]
 name = "pyladoc"
-version = "1.0.0"
+version = "1.1.0"
 authors = [
   { name="Nicolas Kruse", email="nicolas.kruse@nonan.net" },
 ]
@@ -13,8 +13,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "markdown>=3.3.0",
-    "beautifulsoup4>=4.9.1"
+    "markdown>=3.3.0"
 ]
 
 [project.optional-dependencies]
@@ -40,7 +39,6 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 pyladoc = ["templates/*"]
-
 
 [tool.mypy]
 files = ["src"]
