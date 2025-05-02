@@ -1,6 +1,7 @@
 import pyladoc
 import pandas as pd
 
+
 def test_readme_example():
     doc = pyladoc.DocumentWriter()
 
