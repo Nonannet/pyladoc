@@ -218,7 +218,7 @@ def _fillin_reference_names(input_string: str, item_index: dict[str, int]) -> st
     for start, end, ref in replacements:
         assert ref in item_index, f"Reference {ref} does not exist in the document"
         ret.append(input_string[current_pos:start - 1])
-        ret.append(str(item_index[ref]))
+        ret.append(f'<a href="#pyld-ref-{latex.normalize_label_text(ref)}">{item_index[ref]}</a>')
         current_pos = end
     return ''.join(ret) + input_string[current_pos:]
 
@@ -349,14 +349,14 @@ class DocumentWriter():
 
         return inline_pattern.sub(inline_repl, result)
 
-    def _get_equation_html(self, latex_equation: str, caption: str, block: bool = False) -> str:
+    def _get_equation_html(self, latex_equation: str, caption: str, full_ref_str: str, block: bool = False) -> str:
         fig = latex_to_figure(latex_equation)
         if block:
-            ret = ('<div class="equation-container">'
-                   '<div class="equation">%s</div>'
-                   '<div class="equation-number">%s</div></div>') % (
-                        figure_to_string(fig, self._figure_format, base64=self._base64_svgs),
-                        caption)
+            fig_str = figure_to_string(fig, self._figure_format, base64=self._base64_svgs)
+            ret = ('<div class="equation-container" '
+                   f'id="{full_ref_str}">'
+                   f'<div class="equation">{fig_str}</div>'
+                   f'<div class="equation-number">{caption}</div></div>')
         else:
             ret = '<span class="inline-equation">' + figure_to_string(fig, self._figure_format, base64=self._base64_svgs) + '</span>'
 
@@ -372,6 +372,7 @@ class DocumentWriter():
                 self.modified_html = StringIO()
                 self.in_latex: bool = False
                 self.eq_caption: str = ''
+                self.full_ref_str: str = ''
                 self.block: bool = False
                 self.dw = document_writer
 
@@ -382,6 +383,8 @@ class DocumentWriter():
                     self.in_latex = True
                     attr_dict = {k: v if v else '' for k, v in attrs}
                     self.eq_caption = attr_dict.get('caption', '')
+                    self.full_ref_str = latex.normalize_label_text(
+                        f"pyld-ref-{attr_dict.get('ref_type', '')}:{attr_dict.get('ref_id', '')}")
                     self.block = attr_dict.get('type') == 'block'
                 elif not self.in_latex:
                     tag_text = self.get_starttag_text()
@@ -391,7 +394,7 @@ class DocumentWriter():
             def handle_data(self, data: str) -> None:
                 if self.in_latex:
                     self.modified_html.write(
-                        self.dw._get_equation_html(data, self.eq_caption, self.block))
+                        self.dw._get_equation_html(data, self.eq_caption, self.full_ref_str, self.block))
                 else:
                     self.modified_html.write(data)
 
@@ -429,10 +432,12 @@ class DocumentWriter():
                 has an individual numbering
             centered: Whether to center the figure in LaTeX output
         """
-        
+
         def render_to_html() -> str:
             caption_prefix = self._add_item(ref_id, ref_type, prefix_pattern)
-            return '<div class="figure">%s%s</div>' % (
+            full_ref_str = latex.normalize_label_text(f"pyld-ref-{ref_type}:{ref_id}")
+            return '<div id="%s" class="figure">%s%s</div>' % (
+                full_ref_str,
                 figure_to_string(fig, self._figure_format, base64=self._base64_svgs, scale=self._fig_scale),
                 '<br>' + caption_prefix + escape_html(caption) if caption else '')
 
@@ -466,9 +471,11 @@ class DocumentWriter():
         assert isinstance(styler, Styler), 'Jinja2 package is required for rendering tables'
 
         def render_to_html() -> str:
+            full_ref_str = latex.normalize_label_text(f"pyld-ref-{ref_type}:{ref_id}")
             caption_prefix = self._add_item(ref_id, ref_type, prefix_pattern)
+
             html_string = styler.to_html(table_uuid=ref_id, caption=caption_prefix + escape_html(caption))
-            return re.sub(r'<style.*?>.*?</style>', '', html_string, flags=re.DOTALL)
+            return f'<div id="{full_ref_str}">' + re.sub(r'<style.*?>.*?</style>', '', html_string, flags=re.DOTALL) + '</div>'
 
         def render_to_latex() -> str:
             self._add_item(ref_id, ref_type, prefix_pattern)
@@ -582,7 +589,8 @@ class DocumentWriter():
 
         def render_to_html() -> str:
             caption = self._add_item(ref_id, ref_type, '({})')
-            return self._get_equation_html(latex_equation, caption)
+            full_ref_str = latex.normalize_label_text(f"pyld-ref-{ref_type}:{ref_id}")
+            return self._get_equation_html(latex_equation, caption, full_ref_str)
 
         def render_to_latex() -> str:
             self._add_item(ref_id, ref_type, '')
