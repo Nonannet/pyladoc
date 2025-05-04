@@ -98,7 +98,9 @@ def test_html_render():
 def test_latex_render():
     doc = make_document()
 
-    # print(doc.to_latex())
+    if WRITE_RESULT_FILES:
+        with open('tests/out/test_html_render2.tex', 'w', encoding='utf-8') as f:
+            f.write(doc.to_latex())
 
     assert doc.to_pdf('tests/out/test_latex_render2.pdf', font_family='serif')
 
