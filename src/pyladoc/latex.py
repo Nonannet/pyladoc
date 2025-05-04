@@ -82,19 +82,18 @@ def escape_text(text: str) -> str:
     return ''.join(ret)
 
 
-def get_equation_code(equation: str, ref_id: str, ref_type: str, block: bool = False) -> str:
+def get_equation_code(equation: str, reference: str | None, block: bool = False) -> str:
     """
     Converts an equation string to LaTeX code.
 
     Args:
         equation: The LaTeX equation string.
-        ref_id: The reference ID for the equation.
-        ref_type: The type of reference (e.g., 'eq', 'fig', etc.).
+        reference: The reference type and ID for the equation separated by a ':'.
     """
     if block:
-        if ref_id:
-            return '\\begin{equation}\\label{%s:%s}%s\\end{equation}' % (
-                normalize_label_text(ref_type), normalize_label_text(ref_id), equation)
+        if reference:
+            return '\\begin{equation}\\label{%s}%s\\end{equation}' % (
+                normalize_label_text(reference), equation)
         else:
             return '\\[%s\\]' % equation
     else:
@@ -239,9 +238,8 @@ def from_html(html_code: str) -> str:
         def handle_data(self, data: str) -> None:
             if self.equation_flag:
                 block = self.attr_dict.get('type') == 'block'
-                ref_id = self.attr_dict.get('ref_id', '')
-                ref_type = self.attr_dict.get('ref_type', 'eq')
-                self.latex_code.append(get_equation_code(data, ref_id, ref_type, block))
+                reference = self.attr_dict.get('reference')
+                self.latex_code.append(get_equation_code(data, reference, block))
             elif data.strip():
                 self.latex_code.append(escape_text(data))
 
