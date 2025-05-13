@@ -7,9 +7,9 @@ authors = [
 description = "Package for generating HTML and PDF/latex from python code"
 readme = "README.md"
 requires-python = ">=3.8"
+license = "MIT"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
