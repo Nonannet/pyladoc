@@ -19,7 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest", "flake8", "mypy",
-    "lxml", "types-lxml",
+    "lxml", "types-lxml", "types-Markdown", "pandas-stubs",
     "requests",
     "matplotlib>=3.1.1",
     "pandas>=2.0.0", "Jinja2",
