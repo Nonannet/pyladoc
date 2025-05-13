@@ -11,7 +11,7 @@ This package focuses on the "Document in Code" approach for cases
 where a lot of calculations and data handling is done but not a lot of
 document text needs to be displayed. The multiline string capability of Python
 handles this very well. In comparison to "Code in Document"-templates
-python tools supports this approach out of the box.
+python tools supports this approach out of the box - similar doch docstrings.
 
 As backend for PDF generation LaTeX is used. There are excellent engines for
 rendering HTML to PDF, but even if there is no requirement for an
@@ -21,7 +21,7 @@ is a hard problem where LaTeX is superior.
 
 ## Example outputs
 
-![example output](docs/output_example.png)
+[![example output](docs/output_example.png)](https://raw.githubusercontent.com/Nonannet/pyladoc/refs/heads/main/tests/out/test_latex_render1.pdf)
 
 - HTML: [test_html_render1.html](https://html-preview.github.io/?url=https://github.com/Nonannet/pyladoc/blob/main/tests/out/test_html_render1.html) ([code](https://github.com/Nonannet/pyladoc/blob/main/tests/out/test_html_render1.html))
 - PDF: [test_latex_render1.pdf](https://raw.githubusercontent.com/Nonannet/pyladoc/refs/heads/main/tests/out/test_latex_render1.pdf) ([code](https://github.com/Nonannet/pyladoc/blob/main/tests/out/test_html_render1.tex))
@@ -61,6 +61,13 @@ Optional dependencies are:
 - Matplotlib python package for rendering LaTeX equations for HTML output
 - LaTeX for exporting to PDF or exporting Matplotlib figures to LaTeX (PGF/TikZ rendering)
 - Pandas and Matplotlib for including Pandas Tables and Matplotlib figures (obviously)
+
+For the included template the following LaTeX setup works on Ubuntu:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y texlive-latex-extra texlive-fonts-extra lmodern texlive-xetex texlive-science
+```
 
 ## Usage
 It is easy to use as the following example code shows:
