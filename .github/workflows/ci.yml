@@ -70,15 +70,20 @@ jobs:
       run: |
         dir "C:\Program Files\MiKTeX\miktex\bin\x64\*"
 
+    - name: Add miktex to PATH
+      run: |
+        $env:Path += ";C:\Program Files\MiKTeX\miktex\bin\x64"
+
     - name: Show path variable
       run: echo $env:PATH
 
     - name: Install XeTeX and other required packages
       run: |
-        $miktexPath = "C:\Program Files\MiKTeX\miktex\bin\x64"
-        $env:Path += ";$miktexPath"
-        & miktex-console --install xetex --yes
-        & miktex-console --update --yes
+        miktex-console --install xetex --yes
+        miktex-console --update --yes
+
+    - name: test xelatex
+      run: xelatex --version
 
     - name: Install Python dependencies
       run: |
