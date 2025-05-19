@@ -1,5 +1,5 @@
 import pyladoc
-import document_validation
+from . import document_validation
 
 VALIDATE_HTML_CODE_ONLINE = False
 WRITE_RESULT_FILES = True
