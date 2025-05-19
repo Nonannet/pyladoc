@@ -68,15 +68,17 @@ jobs:
 
     - name: Check directory structure of MiKTeX installation
       run: |
-        dir "C:\Program Files\MiKTeX\miktex\*"
+        dir "C:\Program Files\MiKTeX\miktex\bin\x64\*"
+
+    - name: Show path variable
+      run: echo $env:PATH
 
     - name: Install XeTeX and other required packages
       run: |
-        # Ensure MiKTeX executables are in the PATH
         $miktexPath = "C:\Program Files\MiKTeX\miktex\bin\x64"
         $env:Path += ";$miktexPath"
-        & "$miktexPath\miktex-console" --install xetex --yes
-        & "$miktexPath\miktex-console" --update --yes
+        & miktex-console --install xetex --yes
+        & miktex-console --update --yes
 
     - name: Install Python dependencies
       run: |
