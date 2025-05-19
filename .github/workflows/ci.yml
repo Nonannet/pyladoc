@@ -72,15 +72,13 @@ jobs:
 
     - name: Add miktex to PATH
       run: |
-        $env:Path += ";C:\Program Files\MiKTeX\miktex\bin\x64"
+        echo "PATH=$PATH;C:\Program Files\MiKTeX\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Show path variable
-      run: echo $env:PATH
-
-    - name: Install XeTeX and other required packages
       run: |
-        miktex-console --install xetex --yes
-        miktex-console --update --yes
+        echo $env:PATH
+        echo "-----"
+        echo $env:GITHUB_ENV
 
     - name: test xelatex
       run: xelatex --version
