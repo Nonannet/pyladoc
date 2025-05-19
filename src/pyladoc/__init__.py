@@ -336,7 +336,7 @@ class DocumentWriter():
         def inline_repl(match: re.Match[str]) -> str:
             content = match.group(1)
             return f'<latex>{content}</latex>'
-        
+
         return inline_pattern.sub(inline_repl, result)
 
     def _get_equation_html(self, latex_equation: str, caption: str, reference: str, block: bool = False) -> str:
@@ -385,8 +385,8 @@ class DocumentWriter():
                     self.block = attr_dict.get('type') == 'block'
                 elif not self.in_latex:
                     tag_text = self.get_starttag_text()
-                    self.self_closing = tag_text.endswith('/>')
                     if tag_text:
+                        self.self_closing = tag_text.endswith('/>')
                         self.modified_html.write(tag_text)
                     if tag == 'p':
                         self.p_tags += 1

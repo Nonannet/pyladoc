@@ -1,6 +1,6 @@
-import xml.etree.ElementTree as ET
 import re
 from re import Match
+
 
 def update_svg_ids(input_svg: str, unique_id: str) -> str:
     """Add a unique ID part to all svg IDs and update references ti these IDs"""
