@@ -2,10 +2,7 @@ from typing import Generator, Any
 from lxml import etree
 from lxml.etree import _Element as EElement  # type: ignore
 import requests
-
-
-with open('src/pyladoc/templates/test_template.html', mode='rt', encoding='utf-8') as f:
-    html_test_template = f.read()
+import pyladoc
 
 
 def add_line_numbers(multiline_string: str) -> str:
@@ -53,7 +50,7 @@ def validate_html(html_string: str, validate_online: bool = False, check_for: li
         assert tag_type in tags, f"Tag {tag_type} not found in the html code"
 
     if validate_online:
-        test_page = html_test_template.replace('<!--CONTENT-->', html_string)
+        test_page = pyladoc.inject_to_template(html_string, internal_template='templates/test_template.html')
         validation_result = validate_html_with_w3c(test_page)
         assert 'messages' in validation_result, 'Validate request failed'
         if validation_result['messages']:
