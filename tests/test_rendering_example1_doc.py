@@ -1,10 +1,10 @@
 import pyladoc
 import matplotlib.pyplot as plt
 import pandas as pd
-import document_validation
+from . import document_validation
 import numpy as np
 
-VALIDATE_HTML_CODE_ONLINE = False
+VALIDATE_HTML_CODE_ONLINE = True
 WRITE_RESULT_FILES = True
 
 
