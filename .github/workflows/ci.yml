@@ -66,6 +66,11 @@ jobs:
     - name: Install LaTeX
       run: choco install miktex
 
+    - name: Install XeTeX and other required packages
+      run: |
+        mpm --install xetex
+        mpm --update
+
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
