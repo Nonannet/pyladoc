@@ -8,6 +8,7 @@ from . import latex
 import pkgutil
 from html.parser import HTMLParser
 from io import StringIO
+from . import svg_tools
 
 HTML_OUTPUT = 0
 LATEX_OUTPUT = 1
@@ -56,17 +57,6 @@ def _markdown_to_html(text: str) -> str:
     prep_text = re.sub(r'\u00A0', '&nbsp;', text)  # non-breaking space
     html_text = markdown.markdown(prep_text, extensions=['tables', 'fenced_code', 'def_list', 'abbr', 'sane_lists'])
     return html_text
-
-
-def _clean_svg(svg_text: str) -> str:
-    # remove all tags not alllowd for inline svg from metadata:
-    svg_text = re.sub(r'<metadata>.*?</metadata>', '', svg_text, flags=re.DOTALL)
-
-    # remove illegal path-tags without d attribute:
-    return re.sub(r'<path(?![^>]*\sd=)\s.*?/>', '', svg_text, flags=re.DOTALL)
-
-# def _get_templ_vars(template: str) -> list[str]:
-#    return re.findall("<!---START (.+?)--->.*?<!---END .+?--->", template, re.DOTALL)
 
 
 def _drop_indent(text: str, amount: int) -> str:
@@ -142,6 +132,7 @@ def escape_html(text: str) -> str:
 
 
 def figure_to_string(fig: Figure,
+                     unique_id: str,
                      figure_format: FFormat = 'svg',
                      font_family: str | None = None,
                      scale: float = 1,
@@ -175,7 +166,7 @@ def figure_to_string(fig: Figure,
         elif figure_format == 'svg' and not base64:
             i = buff.read(2028).find(b'<svg')  # skip xml and DOCTYPE header
             buff.seek(max(i, 0))
-            return _clean_svg(buff.read().decode('utf-8'))
+            return svg_tools.update_svg_ids(svg_tools.clean_svg(buff.read().decode('utf-8')), unique_id)
 
         else:
             image_mime = {"png": "image/png", "svg": "image/svg+xml"}
@@ -334,9 +325,9 @@ class DocumentWriter():
                 ref_type = parts[0]
                 ref_id = parts[1]
                 caption, reference = self._add_item(ref_id, ref_type, '({})')
-                return (f'\n<latex type="block" reference="{reference}" caption="{caption}">{content}</latex>\n')
+                return (f'<latex type="block" reference="{reference}" caption="{caption}">{content}</latex>')
             else:
-                return f'\n<latex type="block">{content}</latex>\n'
+                return f'<latex type="block">{content}</latex>'
 
         result = block_pattern.sub(block_repl, text)
 
@@ -345,19 +336,19 @@ class DocumentWriter():
         def inline_repl(match: re.Match[str]) -> str:
             content = match.group(1)
             return f'<latex>{content}</latex>'
-
+        
         return inline_pattern.sub(inline_repl, result)
 
     def _get_equation_html(self, latex_equation: str, caption: str, reference: str, block: bool = False) -> str:
         fig = latex_to_figure(latex_equation)
         if block:
-            fig_str = figure_to_string(fig, self._figure_format, base64=self._base64_svgs)
+            fig_str = figure_to_string(fig, reference, self._figure_format, base64=self._base64_svgs)
             ret = ('<div class="equation-container" '
                    f'id="pyld-ref-{reference}">'
                    f'<div class="equation">{fig_str}</div>'
                    f'<div class="equation-number">{caption}</div></div>')
         else:
-            ret = '<span class="inline-equation">' + figure_to_string(fig, self._figure_format, base64=self._base64_svgs) + '</span>'
+            ret = '<span class="inline-equation">' + figure_to_string(fig, reference, self._figure_format, base64=self._base64_svgs) + '</span>'
 
         plt.close(fig)
         return ret
@@ -373,34 +364,54 @@ class DocumentWriter():
                 self.eq_caption: str = ''
                 self.reference: str = ''
                 self.block: bool = False
+                self.p_tags: int = 0
                 self.dw = document_writer
+                self.latex_count = 0
+                self.self_closing = False
 
             def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
                 if tag == 'hr':
                     self.modified_html.write(f"<{tag}>")
+                    self.self_closing = True
                 elif tag == 'latex':
                     self.in_latex = True
                     attr_dict = {k: v if v else '' for k, v in attrs}
                     self.eq_caption = attr_dict.get('caption', '')
-                    self.reference = attr_dict.get('reference', '')
+                    if 'reference' in attr_dict:
+                        self.reference = attr_dict['reference']
+                    else:
+                        self.latex_count += 1
+                        self.reference = f"auto_id_{self.latex_count}"
                     self.block = attr_dict.get('type') == 'block'
                 elif not self.in_latex:
                     tag_text = self.get_starttag_text()
+                    self.self_closing = tag_text.endswith('/>')
                     if tag_text:
                         self.modified_html.write(tag_text)
+                    if tag == 'p':
+                        self.p_tags += 1
 
             def handle_data(self, data: str) -> None:
                 if self.in_latex:
-                    self.modified_html.write(
-                        self.dw._get_equation_html(data, self.eq_caption, self.reference, self.block))
+                    eq_html = self.dw._get_equation_html(data, self.eq_caption, self.reference, self.block)
+                    if self.p_tags > 0 and self.block:
+                        # If a block equation (with divs) is inside a p tag: close and reopen it
+                        self.modified_html.write(f"</p>{eq_html}<p>")
+                    else:
+                        self.modified_html.write(eq_html)
+
                 else:
                     self.modified_html.write(data)
 
             def handle_endtag(self, tag: str) -> None:
                 if tag == 'latex':
                     self.in_latex = False
+                elif self.self_closing:
+                    self.self_closing = False
                 else:
                     self.modified_html.write(f"</{tag}>")
+                    if tag == 'p' and self.p_tags > 0:
+                        self.p_tags -= 1
 
         parser = HTMLPostProcessor(self)
         parser.feed(html_code)
@@ -435,14 +446,14 @@ class DocumentWriter():
             caption_prefix, reference = self._add_item(ref_id, ref_type, prefix_pattern)
             return '<div id="pyld-ref-%s" class="figure">%s%s</div>' % (
                 reference,
-                figure_to_string(fig, self._figure_format, base64=self._base64_svgs, scale=self._fig_scale),
+                figure_to_string(fig, reference, self._figure_format, base64=self._base64_svgs, scale=self._fig_scale),
                 '<br>' + caption_prefix + escape_html(caption) if caption else '')
 
         def render_to_latex() -> str:
             _, reference = self._add_item(ref_id, ref_type, prefix_pattern)
             return '\\begin{figure}%s\n%s\n\\caption{%s}\n%s\\end{figure}' % (
                 '\n\\centering' if centered else '',
-                figure_to_string(fig, 'pgf', self._font_family, scale=self._fig_scale),
+                figure_to_string(fig, reference, 'pgf', self._font_family, scale=self._fig_scale),
                 latex.escape_text(caption),
                 '\\label{%s}\n' % latex.normalize_label_text(reference) if ref_id else '')
 
@@ -603,7 +614,7 @@ class DocumentWriter():
         norm_text = _normalize_text_indent(str(text))
 
         def render_to_html() -> str:
-            html = self._html_post_processing(_markdown_to_html(self._equation_embedding_reescaping(norm_text)))
+            html = _markdown_to_html(self._equation_embedding_reescaping(norm_text))
             if section_class:
                 return '<div class="' + section_class + '">' + html + '</div>'
             else:
@@ -637,7 +648,7 @@ class DocumentWriter():
         self._base64_svgs = base64_svgs
         self._fig_scale = figure_scale
 
-        return _fillin_reference_names(self._render_doc(HTML_OUTPUT), self._item_index)
+        return self._html_post_processing(_fillin_reference_names(self._render_doc(HTML_OUTPUT), self._item_index))
 
     def to_latex(self, font_family: Literal[None, 'serif', 'sans-serif'] = None,
                  table_renderer: TRenderer = 'simple', figure_scale: float = 1) -> str:
