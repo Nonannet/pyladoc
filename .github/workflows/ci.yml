@@ -66,10 +66,17 @@ jobs:
     - name: Install LaTeX
       run: choco install miktex
 
+    - name: Check directory structure of MiKTeX installation
+      run: |
+        dir "C:\Program Files\MiKTeX\*"
+
     - name: Install XeTeX and other required packages
       run: |
-        mpm --install xetex
-        mpm --update
+        # Ensure MiKTeX executables are in the PATH
+        $miktexPath = "C:\Program Files\MiKTeX\bin\x64"
+        $env:Path += ";$miktexPath"
+        & "$miktexPath\miktex-console" --install xetex --yes
+        & "$miktexPath\miktex-console" --update --yes
 
     - name: Install Python dependencies
       run: |
