@@ -168,7 +168,9 @@ def test_latex_render():
         with open('tests/out/test_html_render1.tex', 'w', encoding='utf-8') as f:
             f.write(doc.to_latex())
 
-    assert doc.to_pdf('tests/out/test_latex_render1.pdf', font_family='serif')
+        assert doc.to_pdf('tests/out/test_latex_render1.pdf', font_family='serif')
+    else:
+        assert doc.to_pdf('', font_family='serif')  # Write only to temp folder
 
 
 if __name__ == '__main__':
