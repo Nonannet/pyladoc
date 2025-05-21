@@ -673,7 +673,8 @@ class DocumentWriter():
     def to_pdf(self, file_path: str,
                font_family: Literal[None, 'serif', 'sans-serif'] = None,
                table_renderer: TRenderer = 'simple',
-               latex_template_path: str = '') -> bool:
+               latex_template_path: str = '',
+               engine: latex.LatexEngine = 'pdflatex') -> bool:
         """
         Export the document to a PDF file using LaTeX.
 
@@ -683,6 +684,7 @@ class DocumentWriter():
             latex_template_path: Path to a LaTeX template file. The
                 expression <!--CONTENT--> will be replaced by the generated content.
                 If no path is provided a default template is used.
+            engine: LaTeX engine (pdflatex, lualatex, xelatex or tectonic)
 
         Returns:
             True if the PDF file was successfully created
@@ -693,7 +695,7 @@ class DocumentWriter():
 
         if font_family == 'sans-serif':
             latex_code = latex.inject_latex_command(latex_code, '\\renewcommand{\\familydefault}{\\sfdefault}')
-        success, errors, warnings = latex.compile(latex_code, file_path)
+        success, errors, warnings = latex.compile(latex_code, file_path, engine=engine)
 
         if not success:
             print('Errors:')

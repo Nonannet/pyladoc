@@ -1,5 +1,5 @@
 from html.parser import HTMLParser
-from typing import Generator, Any
+from typing import Generator, Any, Literal, get_args
 from pandas.io.formats.style import Styler
 import re
 import os
@@ -7,6 +7,9 @@ import shutil
 import subprocess
 import tempfile
 from .latex_escaping import unicode_to_latex_dict, latex_escape_dict
+
+
+LatexEngine = Literal['pdflatex', 'lualatex', 'xelatex', 'tectonic']
 
 
 def basic_formatter(value: Any) -> str:
@@ -248,7 +251,7 @@ def from_html(html_code: str) -> str:
     return ''.join(parser.latex_code)
 
 
-def compile(latex_code: str, output_file: str = '', encoding: str = 'utf-8') -> tuple[bool, list[str], list[str]]:
+def compile(latex_code: str, output_file: str = '', encoding: str = 'utf-8', engine: LatexEngine = 'pdflatex') -> tuple[bool, list[str], list[str]]:
     """
     Compiles LaTeX code to a PDF file.
 
@@ -256,6 +259,7 @@ def compile(latex_code: str, output_file: str = '', encoding: str = 'utf-8') -> 
         latex_code: The LaTeX code to compile.
         output_file: The output file path.
         encoding: The encoding of the LaTeX code.
+        engine: LaTeX engine (pdflatex, lualatex, xelatex or tectonic)
 
     Returns:
         A tuple with three elements:
@@ -264,8 +268,13 @@ def compile(latex_code: str, output_file: str = '', encoding: str = 'utf-8') -> 
         - A list of warnings.
     """
 
+    assert engine in get_args(LatexEngine), "engine must be pdflatex, lualatex, xelatex or tectonic"
+
     with tempfile.TemporaryDirectory() as tmp_path:
-        command = ['pdflatex', '-halt-on-error', '--output-directory', tmp_path]
+        if engine == 'tectonic':
+            command = ['tectonic', '--outdir', tmp_path, '-']
+        else:
+            command = [engine, '--halt-on-error', '--output-directory', tmp_path]
 
         errors: list[str] = []
         warnings: list[str] = []
