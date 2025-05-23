@@ -674,6 +674,7 @@ class DocumentWriter():
                font_family: Literal[None, 'serif', 'sans-serif'] = None,
                table_renderer: TRenderer = 'simple',
                latex_template_path: str = '',
+               figure_scale: float = 1,
                engine: latex.LatexEngine = 'pdflatex') -> bool:
         """
         Export the document to a PDF file using LaTeX.
@@ -689,7 +690,7 @@ class DocumentWriter():
         Returns:
             True if the PDF file was successfully created
         """
-        latex_code = inject_to_template(self.to_latex(font_family, table_renderer),
+        latex_code = inject_to_template(self.to_latex(font_family, table_renderer, figure_scale),
                                         latex_template_path,
                                         'templates/default_template.tex')
 
