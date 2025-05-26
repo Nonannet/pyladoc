@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pyladoc &mdash; pyladoc  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Pyladoc" href="readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            pyladoc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pyladoc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Pyladoc classes, functions and submodules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">pyladoc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Pyladoc</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pyladoc</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#example-outputs">Example outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#developer-guide">Developer Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Pyladoc classes, functions and submodules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#documentwriter-class">DocumentWriter Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#submodule-latex">Submodule latex</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="pyladoc">
+<h1>Pyladoc<a class="headerlink" href="#pyladoc" title="Link to this heading"></a></h1>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading"></a></h2>
+<p>Pyladoc is a python package for programmatically generating HTML and
+PDF/LaTeX output. This package targets specifically applications where reports
+or results with Pandas-tables and Matplotlib-figures are generated
+to be displayed as website and as PDF document without involving any manual
+formatting steps.</p>
+<p>This package focuses on the “Document in Code” approach for cases
+where a lot of calculations and data handling is done but not a lot of
+document text needs to be displayed. The multiline string capability of Python
+handles this very well. In comparison to “Code in Document”-templates
+python tools supports this approach out of the box - similar doch docstrings.</p>
+<p>As backend for PDF generation LaTeX is used. There are excellent engines for
+rendering HTML to PDF, but even if there is no requirement for an
+accurate typesetting and what not, placing programmatically content of variable
+composition and element sizes on fixed size pages without manual intervention
+is a hard problem where LaTeX is superior.</p>
+</section>
+<section id="example-outputs">
+<h2>Example outputs<a class="headerlink" href="#example-outputs" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://raw.githubusercontent.com/Nonannet/pyladoc/refs/heads/main/tests/out/test_latex_render1.pdf"><img alt="example output" src="media/output_example.png" /></a></p>
+<ul class="simple">
+<li><p>HTML: <a class="reference external" href="https://html-preview.github.io/?url=https://github.com/Nonannet/pyladoc/blob/main/tests/out/test_html_render1.html">test_html_render1.html</a> (<a class="reference external" href="https://github.com/Nonannet/pyladoc/blob/main/tests/out/test_html_render1.html">code</a>)</p></li>
+<li><p>PDF: <a class="reference external" href="https://raw.githubusercontent.com/Nonannet/pyladoc/refs/heads/main/tests/out/test_latex_render1.pdf">test_latex_render1.pdf</a> (<a class="reference external" href="https://github.com/Nonannet/pyladoc/blob/main/tests/out/test_html_render1.tex">code</a>)</p></li>
+</ul>
+<p>The documents are generated by the script <a class="reference internal" href="#tests/test_rendering_example1_doc.py"><span class="xref myst">tests/test_rendering_example1_doc.py</span></a>.</p>
+<section id="supported-primitives">
+<h3>Supported primitives<a class="headerlink" href="#supported-primitives" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Text (can be Markdown or HTML formatted)</p></li>
+<li><p>Headings</p></li>
+<li><p>Tables (Pandas, Markdown or HTML)</p></li>
+<li><p>Matplotlib figures</p></li>
+<li><p>LaTeX equations (block or inline)</p></li>
+<li><p>Named references for figures, tables and equations</p></li>
+</ul>
+</section>
+<section id="key-features">
+<h3>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>HTML and PDF/LaTeX rendering of the same document</p></li>
+<li><p>Single file output including figures</p></li>
+<li><p>Figure and equation embedding in HTML by inline SVG, SVG in Base64 or PNG in Base64</p></li>
+<li><p>Figure embedding in LaTeX as PGF/TikZ</p></li>
+<li><p>Tested on Linux and Windows</p></li>
+</ul>
+</section>
+<section id="usage-scenarios">
+<h3>Usage Scenarios<a class="headerlink" href="#usage-scenarios" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Webservices</p></li>
+<li><p>Report generation for lab equipment</p></li>
+</ul>
+</section>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>It can be installed with pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyladoc
+</pre></div>
+</div>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h2>
+<p>Pyladoc depends on the markdown package.</p>
+<p>Optional dependencies are:</p>
+<ul class="simple">
+<li><p>Matplotlib python package for rendering LaTeX equations for HTML output</p></li>
+<li><p>LaTeX for exporting to PDF or exporting Matplotlib figures to LaTeX (PGF/TikZ rendering)</p></li>
+<li><p>Pandas and Matplotlib for including Pandas Tables and Matplotlib figures (obviously)</p></li>
+</ul>
+<p>For the included template the following LaTeX setup works on Ubuntu:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>texlive-latex-extra<span class="w"> </span>texlive-fonts-extra<span class="w"> </span>lmodern<span class="w"> </span>texlive-xetex<span class="w"> </span>texlive-science
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>It is easy to use as the following example code shows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyladoc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">doc</span> <span class="o">=</span> <span class="n">pyladoc</span><span class="o">.</span><span class="n">DocumentWriter</span><span class="p">()</span>
+
+<span class="n">doc</span><span class="o">.</span><span class="n">add_markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    # Example</span>
+<span class="s2">    This is inline LaTeX: $$</span><span class="se">\\</span><span class="s2">lambda$$</span>
+
+<span class="s2">    This is a LaTeX block with a number:</span>
+<span class="s2">    $$</span>
+<span class="s2">    </span><span class="se">\\</span><span class="s2">label{eq:test1}</span>
+<span class="s2">    </span><span class="se">\\</span><span class="s2">lambda_{</span><span class="se">\t</span><span class="s2">ext</span><span class="si">{mix}</span><span class="s2">} = </span><span class="se">\\</span><span class="s2">sum_{i=1}^</span><span class="si">{n}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">frac{x_i </span><span class="se">\\</span><span class="s2">lambda_i}{</span><span class="se">\\</span><span class="s2">sum_{j=1}^</span><span class="si">{n}</span><span class="s2"> x_j </span><span class="se">\\</span><span class="s2">Phi_</span><span class="si">{ij}</span><span class="s2">}</span>
+<span class="s2">    $$</span>
+
+<span class="s2">    This is an example table. The table @table:pandas_example shows some random data.</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">some_data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Row1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Line1&quot;</span><span class="p">,</span> <span class="s2">&quot;Line2&quot;</span><span class="p">,</span> <span class="s2">&quot;Line3&quot;</span><span class="p">],</span>
+    <span class="s1">&#39;Row2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">120</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">110</span><span class="p">],</span>
+    <span class="s1">&#39;Row3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;12 g/km&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt; 150 g/km&#39;</span><span class="p">,</span> <span class="s1">&#39;110 g/km&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">some_data</span><span class="p">)</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;This is a pandas example table&#39;</span><span class="p">,</span> <span class="s1">&#39;pandas_example&#39;</span><span class="p">)</span>
+
+<span class="n">html_code</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_html</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">html_code</span><span class="p">)</span>
+
+<span class="n">doc</span><span class="o">.</span><span class="n">to_pdf</span><span class="p">(</span><span class="s1">&#39;test.pdf&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>Contributions are welcome, please open an issue or submit a pull request on GitHub.</p>
+</section>
+<section id="developer-guide">
+<h2>Developer Guide<a class="headerlink" href="#developer-guide" title="Link to this heading"></a></h2>
+<p>To get started with developing the <code class="docutils literal notranslate"><span class="pre">pyladoc</span></code> package, follow these steps.</p>
+<p>First, clone the repository to your local machine using Git:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Nonannet/pyladoc.git
+<span class="nb">cd</span><span class="w"> </span>pyladoc
+</pre></div>
+</div>
+<p>It’s recommended to setup an venv:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># On Windows use `venv\Scripts\activate`</span>
+</pre></div>
+</div>
+<p>Install the package and dev-dependencies while keeping files in the
+current directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
+</pre></div>
+</div>
+<p>Ensure that everything is set up correctly by running the tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
+</pre></div>
+</div>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
+<p>This project is licensed under the MIT License - see the <a class="reference internal" href="#LICENSE"><span class="xref myst">LICENSE</span></a> file for details.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="readme.html" class="btn btn-neutral float-right" title="Pyladoc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Nicolas Kruse.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
