@@ -33,6 +33,7 @@ else:
         Table = DataFrame | Styler
     except ImportError:
         Table = DataFrame
+        Styler = None
 
     try:
         import matplotlib.pyplot as plt
@@ -475,8 +476,8 @@ class DocumentWriter():
             centered: Whether to center the table in LaTeX output
         """
         assert Table and isinstance(table, Table), 'Table has to be a pandas DataFrame oder DataFrame Styler'
-        styler = table if isinstance(table, Styler) else getattr(table, 'style', None)
-        assert isinstance(styler, Styler), 'Jinja2 package is required for rendering tables'
+        styler = table if Styler and isinstance(table, Styler) else getattr(table, 'style', None)  # type: ignore[truthy-function]
+        assert Styler and isinstance(styler, Styler), 'Jinja2 package is required for rendering pandas tables'  # type: ignore[truthy-function]
 
         def render_to_html() -> str:
             caption_prefix, reference = self._add_item(ref_id, ref_type, prefix_pattern)

@@ -1,6 +1,5 @@
 from html.parser import HTMLParser
-from typing import Generator, Any, Literal, get_args
-from pandas.io.formats.style import Styler
+from typing import Generator, Any, Literal, get_args, TYPE_CHECKING
 import re
 import os
 import shutil
@@ -8,6 +7,13 @@ import subprocess
 import tempfile
 from .latex_escaping import unicode_to_latex_dict, latex_escape_dict
 
+if TYPE_CHECKING:
+    from pandas.io.formats.style import Styler
+else:
+    try:
+        from pandas.io.formats.style import Styler
+    except ImportError:
+        Styler = None
 
 LatexEngine = Literal['pdflatex', 'lualatex', 'xelatex', 'tectonic']
 
@@ -116,6 +122,9 @@ def render_pandas_styler_table(df_style: Styler, caption: str = '', label: str =
     Returns:
         The LaTeX code.
     """
+    assert Styler, 'Jinja2 package is required for rendering pandas tables'
+    assert isinstance(df_style, Styler), 'df_style has to be of type Styler'
+
     def iter_table(table: dict[str, Any]) -> Generator[str, None, None]:
         yield '\\begin{table}\n'
         if centering:
