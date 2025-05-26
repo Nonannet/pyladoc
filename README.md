@@ -60,13 +60,15 @@ Pyladoc depends on the markdown package.
 Optional dependencies are:
 - Matplotlib python package for rendering LaTeX equations for HTML output
 - LaTeX for exporting to PDF or exporting Matplotlib figures to LaTeX (PGF/TikZ rendering)
-- Pandas and Matplotlib for including Pandas Tables and Matplotlib figures (obviously)
+- Pandas and Jinja2 for rendering pandas tables
+- Matplotlib for rendering matplotlib figures (obviously)
 
-For the included template the following LaTeX setup works on Ubuntu:
+For the included template the `miktex`-LaTeX distribution works on Windows
+and the following LaTeX setup works on Ubuntu (both tested in CI):
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y texlive-latex-extra texlive-fonts-extra lmodern texlive-xetex texlive-science
+sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended lmodern texlive-xetex texlive-science
 ```
 
 ## Usage
@@ -121,8 +123,8 @@ cd pyladoc
 It's recommended to setup an venv:
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+python -m venv .venv
+source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
 ```
 
 Install the package and dev-dependencies while keeping files in the
