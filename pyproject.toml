@@ -29,6 +29,7 @@ dev = [
 Homepage = "https://github.com/Nonannet/pyladoc"
 Repository = "https://github.com/Nonannet/pyladoc"
 Issues = "https://github.com/Nonannet/pyladoc/issues"
+documentation = "https://nonannet.github.io/pyladoc/"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]

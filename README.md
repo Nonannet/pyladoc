@@ -21,7 +21,7 @@ is a hard problem where LaTeX is superior.
 
 ## Example outputs
 
-[![example output](docs/output_example.png)](https://raw.githubusercontent.com/Nonannet/pyladoc/refs/heads/main/tests/out/test_latex_render1.pdf)
+[![example output](media/output_example.png)](https://raw.githubusercontent.com/Nonannet/pyladoc/refs/heads/main/tests/out/test_latex_render1.pdf)
 
 - HTML: [test_html_render1.html](https://html-preview.github.io/?url=https://github.com/Nonannet/pyladoc/blob/main/tests/out/test_html_render1.html) ([code](https://github.com/Nonannet/pyladoc/blob/main/tests/out/test_html_render1.html))
 - PDF: [test_latex_render1.pdf](https://raw.githubusercontent.com/Nonannet/pyladoc/refs/heads/main/tests/out/test_latex_render1.pdf) ([code](https://github.com/Nonannet/pyladoc/blob/main/tests/out/test_html_render1.tex))
