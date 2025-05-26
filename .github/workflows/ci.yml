@@ -7,6 +7,41 @@ on:
     branches: [main]
 
 jobs:
+  build-ubuntu-no-optional-dependencies:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.12]
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install from source and install pytest
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -e .
+        python -m pip install pytest
+
+    - name: Run tests with pytest (no matplotlib, no pandas)
+      run: |
+        pytest tests\test_rendering_markdown.py::test_markdown_styling
+        pytest tests\test_rendering_markdown.py::test_markdown_table
+
+    - name: Install matplotlib
+      run: |
+        python -m pip install matplotlib
+
+    - name: Run tests with pytest rendering equations (with matplotlib)
+      run: |
+        pytest tests\test_rendering_markdown.py::test_markdown_equations
+
   build-ubuntu:
     runs-on: ubuntu-latest
 
