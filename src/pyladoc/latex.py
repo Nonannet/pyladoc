@@ -122,7 +122,7 @@ def render_pandas_styler_table(df_style: Styler, caption: str = '', label: str =
     Returns:
         The LaTeX code.
     """
-    assert Styler, 'Jinja2 package is required for rendering pandas tables'
+    assert Styler, 'Jinja2 package is required for rendering pandas tables'  # type: ignore[truthy-function]
     assert isinstance(df_style, Styler), 'df_style has to be of type Styler'
 
     def iter_table(table: dict[str, Any]) -> Generator[str, None, None]:
