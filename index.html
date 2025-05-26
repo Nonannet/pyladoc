@@ -164,11 +164,13 @@ is a hard problem where LaTeX is superior.</p>
 <ul class="simple">
 <li><p>Matplotlib python package for rendering LaTeX equations for HTML output</p></li>
 <li><p>LaTeX for exporting to PDF or exporting Matplotlib figures to LaTeX (PGF/TikZ rendering)</p></li>
-<li><p>Pandas and Matplotlib for including Pandas Tables and Matplotlib figures (obviously)</p></li>
+<li><p>Pandas and Jinja2 for rendering pandas tables</p></li>
+<li><p>Matplotlib for rendering matplotlib figures (obviously)</p></li>
 </ul>
-<p>For the included template the following LaTeX setup works on Ubuntu:</p>
+<p>For the included template the <code class="docutils literal notranslate"><span class="pre">miktex</span></code>-LaTeX distribution works on Windows
+and the following LaTeX setup works on Ubuntu (both tested in CI):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>texlive-latex-extra<span class="w"> </span>texlive-fonts-extra<span class="w"> </span>lmodern<span class="w"> </span>texlive-xetex<span class="w"> </span>texlive-science
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>texlive-latex-extra<span class="w"> </span>texlive-fonts-recommended<span class="w"> </span>lmodern<span class="w"> </span>texlive-xetex<span class="w"> </span>texlive-science
 </pre></div>
 </div>
 </section>
@@ -221,8 +223,8 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </pre></div>
 </div>
 <p>It’s recommended to setup an venv:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
-<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># On Windows use `venv\Scripts\activate`</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate<span class="w">  </span><span class="c1"># On Windows use `.venv\Scripts\activate`</span>
 </pre></div>
 </div>
 <p>Install the package and dev-dependencies while keeping files in the
