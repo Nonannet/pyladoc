@@ -31,8 +31,8 @@ jobs:
 
     - name: Run tests with pytest (no matplotlib, no pandas)
       run: |
-        pytest tests\test_rendering_markdown.py::test_markdown_styling
-        pytest tests\test_rendering_markdown.py::test_markdown_table
+        pytest tests/test_rendering_markdown.py::test_markdown_styling
+        pytest tests/test_rendering_markdown.py::test_markdown_table
 
     - name: Install matplotlib
       run: |
@@ -40,7 +40,7 @@ jobs:
 
     - name: Run tests with pytest rendering equations (with matplotlib)
       run: |
-        pytest tests\test_rendering_markdown.py::test_markdown_equations
+        pytest tests/test_rendering_markdown.py::test_markdown_equations
 
   build-ubuntu:
     runs-on: ubuntu-latest
