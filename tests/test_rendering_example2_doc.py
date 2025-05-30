@@ -90,8 +90,6 @@ def test_html_render():
 
     document_validation.validate_html(html_code, VALIDATE_HTML_CODE_ONLINE)
 
-    title = 'Test HTML Render 2'
-
     if WRITE_RESULT_FILES:
         with open('tests/out/test_html_render2.html', 'w', encoding='utf-8') as f:
             f.write(pyladoc.inject_to_template({'CONTENT': html_code}, internal_template='templates/test_template.html'))

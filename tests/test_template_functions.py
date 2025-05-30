@@ -1,5 +1,6 @@
 import pyladoc
 
+
 def test_inject_to_template():
     template = """
     <!DOCTYPE html>
@@ -15,14 +16,13 @@ def test_inject_to_template():
     </body>
     </html>
     """
-    
+
     content = "Hello, World!"
     title = "Test Title"
 
-    
-    result = pyladoc.inject_to_template({'CONTENT': content, 'TITLE': title},template_string=template)
+    result = pyladoc.inject_to_template({'CONTENT': content, 'TITLE': title}, template_string=template)
 
     print(result)
-    
+
     assert "Hello, World!" in result
     assert "<title>Test Title</title>" in result
