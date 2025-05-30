@@ -158,7 +158,7 @@ def test_html_render():
 
     if WRITE_RESULT_FILES:
         with open('tests/out/test_html_render1.html', 'w', encoding='utf-8') as f:
-            f.write(pyladoc.inject_to_template(html_code, internal_template='templates/test_template.html'))
+            f.write(pyladoc.inject_to_template({'CONTENT': html_code}, internal_template='templates/test_template.html'))
 
 
 def test_latex_render():

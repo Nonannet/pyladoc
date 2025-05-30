@@ -246,30 +246,40 @@ def _create_document_writer() -> 'DocumentWriter':
     return new_dwr
 
 
-def inject_to_template(content: str, template_path: str = '', internal_template: str = '') -> str:
+def inject_to_template(fields_dict: dict[str, str],
+                       template_path: str = '',
+                       internal_template: str = '',
+                       template_string: str = '',
+                       ) -> str:
     """
-    injects a content string into a template. The placeholder <!--CONTENT-->
+    injects content fields into a template. The placeholder <!--CONTENT-->
     will be replaced by the content. If the placeholder is prefixed with a
     '%' comment character, this character will be replaced as well.
 
     Args:
+        fields_dict: A dictionary with field names as keys and content as values
         template_path: Path to a template file
         internal_template: Path to a internal default template
+        template_string: A template string to use directly
 
     Returns:
         Template with included content
     """
+    assert isinstance(fields_dict, dict), 'fields_dict must be a dictionary'
     if template_path:
         with open(template_path, 'r') as f:
             template = f.read()
     elif internal_template:
         template = _get_pkgutil_string(internal_template)
+    elif template_string:
+        template = template_string
     else:
         raise Exception('No template provided')
 
-    assert '<!--CONTENT-->' in template, 'No <!--CONTENT--> expression in template located'
-    prep_template = re.sub(r"\%?\s*<!--CONTENT-->", '<!--CONTENT-->', template)
-    return prep_template.replace('<!--CONTENT-->', content)
+    def replace_field(match: re.Match[str]) -> str:
+        return fields_dict.get(match.group(1), match.string)
+
+    return re.sub(r"(?:\%+\s*)?\<!--(.*?)-->", replace_field, template)
 
 
 class DocumentWriter():
@@ -675,6 +685,7 @@ class DocumentWriter():
                font_family: Literal[None, 'serif', 'sans-serif'] = None,
                table_renderer: TRenderer = 'simple',
                latex_template_path: str = '',
+               fields_dict: dict[str, str] = {},
                figure_scale: float = 1,
                engine: latex.LatexEngine = 'pdflatex') -> bool:
         """
@@ -683,15 +694,21 @@ class DocumentWriter():
         Args:
             file_path: The path to save the PDF file to
             font_family: Overwrites the front family for figures and the template
+            table_renderer: The renderer for tables (simple: renderer with column type
+                guessing for text and numbers; pandas: using the internal pandas LaTeX renderer)
             latex_template_path: Path to a LaTeX template file. The
                 expression <!--CONTENT--> will be replaced by the generated content.
                 If no path is provided a default template is used.
+            fields_dict: A dictionary with field names as keys and content as values
+                replacing the placeholders <!--KEY--> in the template.
+            figure_scale: Scaling factor for the figure size
             engine: LaTeX engine (pdflatex, lualatex, xelatex or tectonic)
 
         Returns:
             True if the PDF file was successfully created
         """
-        latex_code = inject_to_template(self.to_latex(font_family, table_renderer, figure_scale),
+        content = self.to_latex(font_family, table_renderer, figure_scale)
+        latex_code = inject_to_template({'CONTENT': content},
                                         latex_template_path,
                                         'templates/default_template.tex')
 
