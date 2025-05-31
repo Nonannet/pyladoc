@@ -277,7 +277,6 @@ def inject_to_template(fields_dict: dict[str, str],
         raise Exception('No template provided')
 
     def replace_field(match: re.Match[str]) -> str:
-        print('--->', match.group(0))
         return fields_dict.get(match.group(1), match.group(0))
 
     return re.sub(r"(?:\%+\s*)?\<!--(.*?)-->", replace_field, template, 0, re.MULTILINE)
