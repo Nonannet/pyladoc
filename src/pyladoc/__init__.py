@@ -709,10 +709,9 @@ class DocumentWriter():
             True if the PDF file was successfully created
         """
         content = self.to_latex(font_family, table_renderer, figure_scale)
-        latex_code = inject_to_template({'CONTENT': content},
+        latex_code = inject_to_template({'CONTENT': content} | fields_dict,
                                         latex_template_path,
-                                        internal_template = 'templates/default_template.tex',
-                                        fields_dict = fields_dict)
+                                        internal_template='templates/default_template.tex')
 
         if font_family == 'sans-serif':
             latex_code = latex.inject_latex_command(latex_code, '\\renewcommand{\\familydefault}{\\sfdefault}')

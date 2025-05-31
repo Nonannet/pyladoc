@@ -28,6 +28,7 @@ def test_inject_to_template_html():
     assert "<!-- some comment -->" in result  # Keep unrelated HTML comments
     assert "<title>Test Title</title>" in result
 
+
 def test_inject_to_template_latex():
     template = """
 \\documentclass[a4paper,12pt]{article}
