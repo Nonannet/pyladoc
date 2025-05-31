@@ -277,9 +277,10 @@ def inject_to_template(fields_dict: dict[str, str],
         raise Exception('No template provided')
 
     def replace_field(match: re.Match[str]) -> str:
-        return fields_dict.get(match.group(1), match.string)
+        print('--->', match.group(0))
+        return fields_dict.get(match.group(1), match.group(0))
 
-    return re.sub(r"(?:\%+\s*)?\<!--(.*?)-->", replace_field, template)
+    return re.sub(r"(?:\%+\s*)?\<!--(.*?)-->", replace_field, template, 0, re.MULTILINE)
 
 
 class DocumentWriter():
@@ -710,7 +711,8 @@ class DocumentWriter():
         content = self.to_latex(font_family, table_renderer, figure_scale)
         latex_code = inject_to_template({'CONTENT': content},
                                         latex_template_path,
-                                        'templates/default_template.tex')
+                                        internal_template = 'templates/default_template.tex',
+                                        fields_dict = fields_dict)
 
         if font_family == 'sans-serif':
             latex_code = latex.inject_latex_command(latex_code, '\\renewcommand{\\familydefault}{\\sfdefault}')
