@@ -131,7 +131,7 @@ def render_pandas_styler_table(df_style: Styler, caption: str = '', label: str =
             yield '\\centering\n'
 
         # Guess column type
-        numeric = re.compile(r'^[<>]?\s*(?:\d+,?)+(?:\.\d+)?(?:\s\D.*)?$')
+        numeric = re.compile('^[<>-\u2212]?\\s*(?:\\d+,?)+(?:\\.\\d+)?(?:\\s\\D.*)?$')
         formats = ['S' if all(
             (numeric.match(line[ci]['display_value'].strip()) for line in table['body'])
         ) else 'l' for ci in range(len(table['body'][0])) if table['body'][0][ci]['is_visible']]
