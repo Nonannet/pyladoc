@@ -68,7 +68,8 @@ unicode_to_latex_dict = {
     '£': r'{\pounds}',
     '¥': r'{\yen}',
     '\u00A0': r'~',  # Non-breaking space
-    '\u2007': ' '  # Figure space
+    '\u2007': ' ',  # Figure space
+    '\u2212': '-'  # Unicode minus sign
 }
 
 latex_escape_dict = {

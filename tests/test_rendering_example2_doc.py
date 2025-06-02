@@ -71,11 +71,11 @@ def make_document():
     mydataset = {
         'Row1': ["Line1", "Line2", "Line3", "Line4", "Line5"],
         'Row2': [120, '95 km/h', 110, '105 km/h', 130],
-        'Row3': ['12 g/km', '> 150 g/km', '110 g/km', '1140 g/km', '13.05 g/km'],
+        'Row3': ['12 g/km', '> 150 g/km', '-110 g/km', '1140 g/km', '\u221213.05 g/km'],
         'Row4': ['5 stars', '4 stars', '5 stars', '4.5 stars', '5 stars'],
         'Row5': [3.5, 7.8, 8.5, 6.9, 4.2],
-        'Row6': ['1850 kg', '1500 kg', '1400 kg', '1600 kg', '1700 kg'],
-        'Row7': ['600 Nm', '250 Nm', '280 Nm', '320 Nm', '450 Nm']
+        'Row6': ['1850 kg', '150 kg', '140 kg', '1600 kg', '17.55 kg'],
+        'Row7': ['600 Nm', '250 Nm', '280,8 Nm', '320 Nm', '450 Nm']
     }
     df = pd.DataFrame(mydataset)
 
@@ -98,9 +98,13 @@ def test_html_render():
 def test_latex_render():
     doc = make_document()
 
+    latex_code = doc.to_latex()
+
+    assert r'\begin{tabular}{lSSSSSS}' in latex_code, "Table format not correct in LaTeX output"
+
     if WRITE_RESULT_FILES:
         with open('tests/out/test_html_render2.tex', 'w', encoding='utf-8') as f:
-            f.write(doc.to_latex())
+            f.write(latex_code)
 
         assert doc.to_pdf('tests/out/test_latex_render2.pdf', font_family='serif')
     else:
