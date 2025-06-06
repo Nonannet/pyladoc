@@ -18,10 +18,6 @@ else:
 LatexEngine = Literal['pdflatex', 'lualatex', 'xelatex', 'tectonic']
 
 
-def basic_formatter(value: Any) -> str:
-    return escape_text(str(value))
-
-
 def to_ascii(text: str) -> str:
     """
     Replaces/escapes often used unicode characters in LaTeX code or text
@@ -321,6 +317,17 @@ def compile(latex_code: str, output_file: str = '', encoding: str = 'utf-8', eng
 
 
 def inject_latex_command(text: str, command: str) -> str:
+    """
+    Injects a provided LaTeX code under the last line
+    starting with \\usepackage.
+
+    Args:
+        text: input LaTeX code
+        command: code to inject
+
+    Returns:
+        LaTeX code with injected command
+    """
     lines = text.splitlines()
 
     last_package_index = -1

@@ -17,21 +17,22 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.x"
-      - name: Install dependencies
-        run: pip install sphinx sphinx_rtd_theme sphinx-autodoc-typehints myst-parser
+      - name: Install package and dependencies
+        run: pip install .[doc_build]
       - name: Generate Class List
-        run: |
-          pip install .
-          python ./docs/source/generate_class_list.py
+        run: python ./docs/source/generate_class_list.py
       - name: Build Docs
         run: |
+          mkdir -p docs/source/media
+          cp media/* docs/source/media/
+          mkdir -p docs/source/tests
+          cp tests/test_rendering_example*.py docs/source/tests/
+          cp LICENSE docs/source/LICENSE.md
           cd docs
           sphinx-apidoc -o source/ ../src/ -M --no-toc
           rm source/*.rst
           make html
           touch build/html/.nojekyll
-          mkdir -p build/html/media
-          cp ../media/output_example.png build/html/media/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
