@@ -1,0 +1,5 @@
+# pyladoc.latex.from_html
+```{eval-rst}
+.. autofunction:: pyladoc.latex.from_html
+```
+

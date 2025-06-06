@@ -1,0 +1,5 @@
+# pyladoc.latex.escape_text
+```{eval-rst}
+.. autofunction:: pyladoc.latex.escape_text
+```
+

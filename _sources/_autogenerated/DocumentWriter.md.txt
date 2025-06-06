@@ -1,0 +1,9 @@
+# pyladoc.DocumentWriter
+```{eval-rst}
+.. autoclass:: pyladoc.DocumentWriter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+```
+

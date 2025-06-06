@@ -1,0 +1,30 @@
+# Classes and functions
+
+```{toctree}
+:maxdepth: 1
+:caption: DocumentWriter Class:
+DocumentWriter
+```
+
+```{toctree}
+:maxdepth: 1
+:caption: Functions:
+escape_html
+figure_to_string
+inject_to_template
+latex_to_figure
+```
+
+```{toctree}
+:maxdepth: 1
+:caption: Submodule latex:
+compile
+escape_text
+from_html
+get_equation_code
+inject_latex_command
+normalize_label_text
+render_pandas_styler_table
+to_ascii
+```
+

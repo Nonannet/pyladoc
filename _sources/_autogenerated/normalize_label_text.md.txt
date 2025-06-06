@@ -1,0 +1,5 @@
+# pyladoc.latex.normalize_label_text
+```{eval-rst}
+.. autofunction:: pyladoc.latex.normalize_label_text
+```
+

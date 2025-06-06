@@ -1,0 +1,5 @@
+# pyladoc.latex.get_equation_code
+```{eval-rst}
+.. autofunction:: pyladoc.latex.get_equation_code
+```
+

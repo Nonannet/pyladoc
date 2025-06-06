@@ -1,0 +1,5 @@
+# pyladoc.escape_html
+```{eval-rst}
+.. autofunction:: pyladoc.escape_html
+```
+

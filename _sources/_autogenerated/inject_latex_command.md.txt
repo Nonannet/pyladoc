@@ -1,0 +1,5 @@
+# pyladoc.latex.inject_latex_command
+```{eval-rst}
+.. autofunction:: pyladoc.latex.inject_latex_command
+```
+

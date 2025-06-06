@@ -1,0 +1,5 @@
+# pyladoc.latex.compile
+```{eval-rst}
+.. autofunction:: pyladoc.latex.compile
+```
+

@@ -1,0 +1,5 @@
+# pyladoc.figure_to_string
+```{eval-rst}
+.. autofunction:: pyladoc.figure_to_string
+```
+

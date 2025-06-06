@@ -1,0 +1,5 @@
+# pyladoc.inject_to_template
+```{eval-rst}
+.. autofunction:: pyladoc.inject_to_template
+```
+

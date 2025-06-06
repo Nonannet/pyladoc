@@ -1,0 +1,5 @@
+# pyladoc.latex.to_ascii
+```{eval-rst}
+.. autofunction:: pyladoc.latex.to_ascii
+```
+

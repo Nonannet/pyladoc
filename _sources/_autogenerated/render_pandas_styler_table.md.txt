@@ -1,0 +1,5 @@
+# pyladoc.latex.render_pandas_styler_table
+```{eval-rst}
+.. autofunction:: pyladoc.latex.render_pandas_styler_table
+```
+

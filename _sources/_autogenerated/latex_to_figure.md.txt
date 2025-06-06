@@ -1,0 +1,5 @@
+# pyladoc.latex_to_figure
+```{eval-rst}
+.. autofunction:: pyladoc.latex_to_figure
+```
+
