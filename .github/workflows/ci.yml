@@ -107,6 +107,7 @@ jobs:
     - name: Set up MiKTeX Portable
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
+        $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest https://www.nonan.net/w/files/miktex-portable-Win-x64.zip -OutFile miktex-portable-Win-x64.zip
         Expand-Archive miktex-portable-Win-x64.zip -DestinationPath .
 
