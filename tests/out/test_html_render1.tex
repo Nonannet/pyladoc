@@ -7,16 +7,12 @@ This model offers a reliable means of estimating the thermal conductivity of gas
 on the properties of the pure components and their molar interactions.
 
 The thermal conductivity of a gas mixture, denoted by \(\lambda_{\text{mix}}\), can expressed as
-shown in equation \ref{eq:lambda-mixture}.
-\begin{equation}\label{eq:lambda-mixture}\lambda_{   ext{mix}} = \sum_{i=1}^{n} \frac{x_i \lambda_i}{\sum_{j=1}^{n} x_j \Phi_{ij}}\end{equation}
-In this equation, \(x_i\) represents the molar fraction of component \(i\) within the mixture,
+shown in equation \ref{eq:lambda-mixture}.\begin{equation}\label{eq:lambda-mixture}\lambda_{  ext{mix}} = \sum_{i=1}^{n} \frac{x_i \lambda_i}{\sum_{j=1}^{n} x_j \Phi_{ij}}\end{equation}In this equation, \(x_i\) represents the molar fraction of component \(i\) within the mixture,
 while \(\lambda_i\) denotes the thermal conductivity of the pure substance \(i\). The denominator
 contains the interaction parameter \(\Phi_{ij}\), which describes the influence of component
 \(j\) on the transport properties of component \(i\).
 
-The interaction parameter \(\Phi_{ij}\) is given by the relation shown in equation \ref{eq:interaction-parameter}.
-\begin{equation}\label{eq:interaction-parameter}\Phi_{ij} = \frac{1}{\sqrt{8}} \left(1 + \frac{M_i}{M_j} \right)^{-1/2} \left[ 1 + \left( \frac{\lambda_i}{\lambda_j} \right)^{1/2} \left( \frac{M_j}{M_i} \right)^{1/4} \right]^2\end{equation}
-Here, \(M_i\) and \(M_j\) are the molar masses of the components \(i\) and \(j\), respectively.
+The interaction parameter \(\Phi_{ij}\) is given by the relation shown in equation \ref{eq:interaction-parameter}.\begin{equation}\label{eq:interaction-parameter}\Phi_{ij} = \frac{1}{\sqrt{8}} \left(1 + \frac{M_i}{M_j} \right)^{-1/2} \left[ 1 + \left( \frac{\lambda_i}{\lambda_j} \right)^{1/2} \left( \frac{M_j}{M_i} \right)^{1/4} \right]^2\end{equation}Here, \(M_i\) and \(M_j\) are the molar masses of the components \(i\) and \(j\), respectively.
 Molar masses and thermal conductivity of the pure substances are listed in table \ref{table:gas-probs}.
 The structure of this expression illustrates the nonlinear dependence of the interaction term on
 both the molar mass ratio and the square root of the conductivity ratio of the involved species.
