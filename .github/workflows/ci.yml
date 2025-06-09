@@ -107,14 +107,8 @@ jobs:
     - name: Set up MiKTeX Portable
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        Invoke-WebRequest https://www.nonan.net/w/files/miktexsetup-x64.zip -OutFile miktexsetup-x64.zip
-        Expand-Archive miktexsetup-x64.zip -DestinationPath .
-        .\miktexsetup_standalone.exe --package-set=basic --portable=.\miktex-portable  `
-          --use-registry=no --modify-path=no --quiet  `
-          --local-package-repository=.\miktex-portable\miktex-packages download
-        .\miktexsetup_standalone.exe --package-set=basic --portable=.\miktex-portable  `
-        --use-registry=no --modify-path=no --quiet  `
-        --local-package-repository=.\miktex-portable\miktex-packages install
+        Invoke-WebRequest https://www.nonan.net/w/files/miktex-portable-Win-x64.zip -OutFile miktex-portable-Win-x64.zip
+        Expand-Archive miktex-portable-Win-x64.zip -DestinationPath .
 
     - name: Check directory structure of MiKTeX installation
       run: |
