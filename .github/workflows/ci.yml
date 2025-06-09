@@ -117,7 +117,7 @@ jobs:
 
     - name: Add miktex to PATH
       run: |
-        echo "PATH=$PATH;$(pwd)\miktex-portable\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "PATH=$PATH;$(pwd)\miktex-portable\texmfs\install\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Show path variable
       run: |
