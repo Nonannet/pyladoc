@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.12]
+        python-version: ["3.10", 3.13]
 
     steps:
     - name: Check out code
@@ -47,7 +47,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10", 3.13]
+        python-version: ["3.10"]
 
     steps:
     - name: Check out code
@@ -87,7 +87,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10", "3.13"]
+        python-version: ["3.10"]
 
     steps:
     - name: Check out code
@@ -98,16 +98,31 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install LaTeX
-      run: choco install miktex
+    - name: Cache MiKTeX Portable
+      uses: actions/cache@v4
+      with:
+        path: miktex-portable
+        key: miktex-portable-${{ runner.os }}-24.1-x64
+
+    - name: Set up MiKTeX Portable
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        Invoke-WebRequest https://miktex.org/download/win/miktexsetup-x64.zip -OutFile miktexsetup-x64.zip
+        Expand-Archive miktexsetup-x64.zip -DestinationPath .
+        .\miktexsetup_standalone.exe --package-set=basic --portable=.\miktex-portable  `
+          --use-registry=no --modify-path=no --quiet  `
+          --local-package-repository=.\miktex-portable\miktex-packages download
+        .\miktexsetup_standalone.exe --package-set=basic --portable=.\miktex-portable  `
+        --use-registry=no --modify-path=no --quiet  `
+        --local-package-repository=.\miktex-portable\miktex-packages install
 
     - name: Check directory structure of MiKTeX installation
       run: |
-        dir "C:\Program Files\MiKTeX\miktex\bin\x64\*"
+        dir ".\miktex-portable\texmfs\install\miktex\bin\x64\*"
 
     - name: Add miktex to PATH
       run: |
-        echo "PATH=$PATH;C:\Program Files\MiKTeX\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "PATH=$PATH;$(pwd)\miktex-portable\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Show path variable
       run: |
@@ -120,7 +135,6 @@ jobs:
 
     - name: Install Python dependencies
       run: |
-        python -m pip install --upgrade pip
         python -m pip install -e .[dev]
 
     - name: Run tests with pytest
