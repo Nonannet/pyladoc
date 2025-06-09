@@ -114,18 +114,12 @@ jobs:
 
     - name: Copy and check directory structure of MiKTeX installation
       run: |
-        robocopy miktex-portable miktex-run /E /NFL
+        robocopy miktex-portable C:\tmp\test_miktex\miktex-portable /E /NFL /NDL
         if ($LASTEXITCODE -eq 1) { exit 0 }
 
     - name: Add miktex to PATH
       run: |
-        echo "PATH=$PATH;$(pwd)\miktex-run\texmfs\install\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
-
-    - name: Show path variable
-      run: |
-        echo $env:PATH
-        echo "-----"
-        echo $env:GITHUB_ENV
+        echo "PATH=$PATH;C:\tmp\test_miktex\miktex-portable\texmfs\install\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: test xelatex
       run: xelatex --version
