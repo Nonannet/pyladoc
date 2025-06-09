@@ -114,8 +114,8 @@ jobs:
 
     - name: Copy and check directory structure of MiKTeX installation
       run: |
-        robocopy miktex-portable miktex-run /E
-        dir ".\miktex-run\texmfs\install\miktex\bin\x64\*"
+        robocopy miktex-portable miktex-run /E /NFL
+        if ($LASTEXITCODE -ge 8) { exit $LASTEXITCODE }
 
     - name: Add miktex to PATH
       run: |
