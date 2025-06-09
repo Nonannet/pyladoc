@@ -100,12 +100,13 @@ jobs:
 
     - name: Cache MiKTeX Portable
       uses: actions/cache@v4
+      id: miktex
       with:
         path: miktex-portable
         key: miktex-portable-${{ runner.os }}-24.1-x64
 
     - name: Set up MiKTeX Portable
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.miktex.outputs.cache-hit != 'true'
       run: |
         $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest https://www.nonan.net/w/files/miktex-portable-Win-x64.zip -OutFile miktex-portable-Win-x64.zip
