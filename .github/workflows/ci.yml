@@ -119,7 +119,7 @@ jobs:
 
     - name: Add miktex to PATH
       run: |
-        echo "PATH=$PATH;C:\tmp\test_miktex\miktex-portable\texmfs\install\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "PATH=$PATH;C:\tmp\test_miktex\miktex-portable\texmfs\install\miktex\bin\x64;C:\Program Files\Git\usr\bin" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: test xelatex
       run: xelatex --version
