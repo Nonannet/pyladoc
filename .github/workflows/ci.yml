@@ -112,13 +112,14 @@ jobs:
         Invoke-WebRequest https://www.nonan.net/w/files/miktex-portable-Win-x64.zip -OutFile miktex-portable-Win-x64.zip
         Expand-Archive miktex-portable-Win-x64.zip -DestinationPath .
 
-    - name: Check directory structure of MiKTeX installation
+    - name: Copy and check directory structure of MiKTeX installation
       run: |
-        dir ".\miktex-portable\texmfs\install\miktex\bin\x64\*"
+        robocopy miktex-portable miktex-run /E
+        dir ".\miktex-run\texmfs\install\miktex\bin\x64\*"
 
     - name: Add miktex to PATH
       run: |
-        echo "PATH=$PATH;$(pwd)\miktex-portable\texmfs\install\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "PATH=$PATH;$(pwd)\miktex-run\texmfs\install\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Show path variable
       run: |
