@@ -97,33 +97,30 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
 
     - name: Cache MiKTeX Portable
       uses: actions/cache@v4
+      id: miktex
       with:
         path: miktex-portable
         key: miktex-portable-${{ runner.os }}-24.1-x64
 
-    - name: Set up MiKTeX Portable
-      if: steps.cache.outputs.cache-hit != 'true'
+    - if: ${{ steps.miktex.outputs.cache-hit != 'true' }}
+      name: Set up MiKTeX Portable
       run: |
         $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest https://www.nonan.net/w/files/miktex-portable-Win-x64.zip -OutFile miktex-portable-Win-x64.zip
         Expand-Archive miktex-portable-Win-x64.zip -DestinationPath .
 
-    - name: Check directory structure of MiKTeX installation
+    - name: Copy miktex directory
       run: |
-        dir ".\miktex-portable\texmfs\install\miktex\bin\x64\*"
+        robocopy miktex-portable C:\tmp\test_miktex\miktex-portable /E /NFL /NDL
+        if ($LASTEXITCODE -eq 1) { exit 0 }
 
     - name: Add miktex to PATH
       run: |
-        echo "PATH=$PATH;$(pwd)\miktex-portable\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
-
-    - name: Show path variable
-      run: |
-        echo $env:PATH
-        echo "-----"
-        echo $env:GITHUB_ENV
+        echo "PATH=$PATH;C:\tmp\test_miktex\miktex-portable\texmfs\install\miktex\bin\x64;C:\Program Files\Git\usr\bin" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: test xelatex
       run: xelatex --version
