@@ -22,6 +22,7 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
 
     - name: Cache MiKTeX Portable
       uses: actions/cache@v4
@@ -37,24 +38,24 @@ jobs:
         Invoke-WebRequest https://www.nonan.net/w/files/miktex-portable-Win-x64.zip -OutFile miktex-portable-Win-x64.zip
         Expand-Archive miktex-portable-Win-x64.zip -DestinationPath .
 
-    - name: Copy and check directory structure of MiKTeX installation
+    - name: Copy miktex directory
       run: |
         robocopy miktex-portable C:\tmp\test_miktex\miktex-portable /E /NFL /NDL
         if ($LASTEXITCODE -eq 1) { exit 0 }
 
-    - name: Add miktex to PATH
+    - name: Add miktex and git tools to PATH
       run: |
-        echo "PATH=$PATH;C:\tmp\test_miktex\miktex-portable\texmfs\install\miktex\bin\x64;C:\Program Files\Git\usr\bin" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "PATH=$PATH;C:\tmp\test_miktex\miktex-portable\texmfs\install\miktex\bin\x64\" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "PATH=$PATH;C:\Program Files\Git\usr\bin\" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: test xelatex
       run: xelatex --version
 
     - name: Install Python dependencies
-      run: |
-        python -m pip install -e .[dev]
+      run: pip install -e .[dev]
 
     - name: Run tests with pytest
-      run: pytest tests/test_rendering_markdown.py::test_markdown_styling
+      run: pytest
 
     - name: Upload rendered files
       uses: actions/upload-artifact@v4
