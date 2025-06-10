@@ -43,6 +43,9 @@ jobs:
         robocopy miktex-portable C:\tmp\test_miktex\miktex-portable /E /NFL /NDL
         if ($LASTEXITCODE -eq 1) { exit 0 }
 
+    - name: list files
+      run: dir "C:\tmp\test_miktex\miktex-portable\texmfs\install\miktex\bin\x64\*.exe"
+
     - name: Add miktex to PATH
       run: |
         echo "PATH=$PATH;C:\tmp\test_miktex\miktex-portable\texmfs\install\miktex\bin\x64;C:\Program Files\Git\usr\bin" | Out-File -FilePath $env:GITHUB_ENV -Append
