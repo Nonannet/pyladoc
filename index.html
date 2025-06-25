@@ -266,20 +266,20 @@
 <h1>Pyladoc<a class="headerlink" href="#pyladoc" title="Link to this heading">#</a></h1>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
-<p>Pyladoc is a python package for programmatically generating HTML and
-PDF/LaTeX output. This package targets specifically applications where reports
-or results with Pandas-tables and Matplotlib-figures are generated
-to be displayed as website and as PDF document without involving any manual
+<p>Pyladoc is a Python package for programmatically generating HTML and
+PDF/LaTeX output. This package specifically targets applications where reports
+or results with Pandas tables and Matplotlib figures are generated
+to be displayed as a website and as a PDF document without involving any manual
 formatting steps.</p>
 <p>This package focuses on the “Document in Code” approach for cases
 where a lot of calculations and data handling is done but not a lot of
 document text needs to be displayed. The multiline string capability of Python
-handles this very well. In comparison to “Code in Document”-templates
-python tools supports this approach out of the box - similar doch docstrings.</p>
-<p>As backend for PDF generation LaTeX is used. There are excellent engines for
-rendering HTML to PDF, but even if there is no requirement for an
-accurate typesetting and what not, placing programmatically content of variable
-composition and element sizes on fixed size pages without manual intervention
+handles this very well. In comparison to “Code in Document” templates,
+Python tools support this approach out of the box—similar to docstrings.</p>
+<p>LaTeX is used as the backend for PDF generation. There are excellent engines for
+rendering HTML to PDF, but even if there is no requirement for
+accurate typesetting, placing programmatically generated content of variable
+composition and element sizes on fixed-size pages without manual intervention
 is a hard problem where LaTeX is superior.</p>
 </section>
 <section id="example-outputs">
@@ -298,7 +298,7 @@ is a hard problem where LaTeX is superior.</p>
 <li><p>Tables (Pandas, Markdown or HTML)</p></li>
 <li><p>Matplotlib figures</p></li>
 <li><p>LaTeX equations (block or inline)</p></li>
-<li><p>Named references for figures, tables and equations</p></li>
+<li><p>Named references for figures, tables, and equations</p></li>
 </ul>
 </section>
 <section id="key-features">
@@ -306,7 +306,7 @@ is a hard problem where LaTeX is superior.</p>
 <ul class="simple">
 <li><p>HTML and PDF/LaTeX rendering of the same document</p></li>
 <li><p>Single file output including figures</p></li>
-<li><p>Figure and equation embedding in HTML by inline SVG, SVG in Base64 or PNG in Base64</p></li>
+<li><p>Figure and equation embedding in HTML by inline SVG, SVG in Base64, or PNG in Base64</p></li>
 <li><p>Figure embedding in LaTeX as PGF/TikZ</p></li>
 <li><p>Tested on Linux and Windows</p></li>
 </ul>
@@ -314,7 +314,7 @@ is a hard problem where LaTeX is superior.</p>
 <section id="usage-scenarios">
 <h3>Usage Scenarios<a class="headerlink" href="#usage-scenarios" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Webservices</p></li>
+<li><p>Web services</p></li>
 <li><p>Report generation for lab equipment</p></li>
 </ul>
 </section>
@@ -325,18 +325,22 @@ is a hard problem where LaTeX is superior.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyladoc
 </pre></div>
 </div>
+<p>As well as with conda:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>conda-forge::pyladoc
+</pre></div>
+</div>
 </section>
 <section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
 <p>Pyladoc depends on the markdown package.</p>
 <p>Optional dependencies are:</p>
 <ul class="simple">
-<li><p>Matplotlib python package for rendering LaTeX equations for HTML output</p></li>
+<li><p>Matplotlib Python package for rendering LaTeX equations for HTML output</p></li>
 <li><p>LaTeX for exporting to PDF or exporting Matplotlib figures to LaTeX (PGF/TikZ rendering)</p></li>
-<li><p>Pandas and Jinja2 for rendering pandas tables</p></li>
-<li><p>Matplotlib for rendering matplotlib figures (obviously)</p></li>
+<li><p>Pandas and Jinja2 for rendering Pandas tables</p></li>
+<li><p>Matplotlib for rendering Matplotlib figures (obviously)</p></li>
 </ul>
-<p>For the included template the <code class="docutils literal notranslate"><span class="pre">miktex</span></code>-LaTeX distribution works on Windows
+<p>For the included template, the <code class="docutils literal notranslate"><span class="pre">miktex</span></code> LaTeX distribution works on Windows
 and the following LaTeX setup works on Ubuntu (both tested in CI):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>texlive-latex-extra<span class="w"> </span>texlive-fonts-recommended<span class="w"> </span>lmodern<span class="w"> </span>texlive-xetex<span class="w"> </span>texlive-science
@@ -345,7 +349,7 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<p>It is easy to use as the following example code shows:</p>
+<p>It is easy to use, as the following example code shows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyladoc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
@@ -381,7 +385,7 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </section>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">#</a></h2>
-<p>Contributions are welcome, please open an issue or submit a pull request on GitHub.</p>
+<p>Contributions are welcome; please open an issue or submit a pull request on GitHub.</p>
 </section>
 <section id="developer-guide">
 <h2>Developer Guide<a class="headerlink" href="#developer-guide" title="Link to this heading">#</a></h2>
@@ -391,12 +395,12 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 <span class="nb">cd</span><span class="w"> </span>pyladoc
 </pre></div>
 </div>
-<p>It’s recommended to setup an venv:</p>
+<p>It’s recommended to set up a venv:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 <span class="nb">source</span><span class="w"> </span>.venv/bin/activate<span class="w">  </span><span class="c1"># On Windows use `.venv\Scripts\activate`</span>
 </pre></div>
 </div>
-<p>Install the package and dev-dependencies while keeping files in the
+<p>Install the package and development dependencies while keeping files in the
 current directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
 </pre></div>
