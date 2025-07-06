@@ -45,7 +45,7 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-pyladoc = ["templates/*"]
+pyladoc = ["templates/*", "py.typed"]
 
 [tool.mypy]
 files = ["src"]
