@@ -149,7 +149,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: rendering-results-ubuntu
-          path: build/html/files/
+          path: docs/build/html/files/
 
       - name: Set up Python
         uses: actions/setup-python@v3
