@@ -133,3 +133,4 @@ pyModbusTCP_old/
 test.py
 test_*.ipynb
 settings.json
+tests/out/test*
