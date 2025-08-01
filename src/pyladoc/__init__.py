@@ -90,8 +90,9 @@ def _save_figure(fig: Figure, buff: io.BytesIO, figure_format: FFormat, font_fam
             yield ax.xaxis.label
             yield ax.yaxis.label
             yield from ax.get_xticklabels() + ax.get_yticklabels()
-            legend: Mpl_Legend = ax.get_legend()
+            legend = ax.get_legend()
             if legend:
+                assert isinstance(legend, Mpl_Legend)
                 yield from legend.get_texts()
 
     # Store current figure settings
