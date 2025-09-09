@@ -81,7 +81,12 @@ def make_document():
 
     doc.add_table(df.style.hide(axis="index"), 'This is a example table', 'example1')
 
-    doc.add_text("This is a fine print test text section. It uses smaller text and uses grey color.", section_class='fineprint')
+    doc.add_text("This is a fine print test text section. It uses smaller text and uses grey color. This is a fine print test"
+                 "text section. It uses smaller text and uses grey color.", section_class='fineprint')
+
+    doc.add_text("Standard text section. This is normal text without any special formatting. It uses the default text size and color.")
+
+    doc.add_markdown("This is a **fine print** test text section. It uses **smaller text** and uses **grey** color.", section_class='fineprint')
 
     return doc
 

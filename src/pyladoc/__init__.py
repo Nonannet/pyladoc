@@ -633,8 +633,7 @@ class DocumentWriter():
                 return html
 
         def render_to_latex() -> str:
-            html = _markdown_to_html(
-                self._equation_embedding_reescaping(norm_text))
+            html = render_to_html()
             return latex.from_html(html)
 
         self._doc.append([render_to_html, render_to_latex])
