@@ -103,7 +103,7 @@ jobs:
       uses: actions/cache@v4
       id: miktex
       with:
-        path: miktex-portable
+        path: C:\tmp\cache
         key: miktex-portable-${{ runner.os }}-24.1-x64
 
     - if: ${{ steps.miktex.outputs.cache-hit != 'true' }}
@@ -111,11 +111,11 @@ jobs:
       run: |
         $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest https://www.nonan.net/w/files/miktex-portable-Win-x64.zip -OutFile miktex-portable-Win-x64.zip
-        Expand-Archive miktex-portable-Win-x64.zip -DestinationPath .
+        Expand-Archive miktex-portable-Win-x64.zip -DestinationPath C:\tmp\cache\
 
     - name: Copy miktex directory
       run: |
-        robocopy miktex-portable C:\tmp\test_miktex\miktex-portable /E /NFL /NDL
+        robocopy C:\tmp\cache\miktex-portable C:\tmp\test_miktex\miktex-portable /E /NFL /NDL
         if ($LASTEXITCODE -eq 1) { exit 0 }
 
     - name: Add miktex to PATH
