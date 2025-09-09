@@ -621,7 +621,7 @@ class DocumentWriter():
 
         Args:
             text: The markdown text to add
-            section_class: The class for the text section
+            section_class: The HTML-class and LaTeX-environment name for the text section
         """
         norm_text = _normalize_text_indent(str(text))
 

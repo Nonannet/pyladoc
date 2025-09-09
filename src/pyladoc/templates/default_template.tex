@@ -16,10 +16,16 @@
 \usepackage{booktabs} % For professional-looking tables
 \usepackage{pgf} % For using pgf grafics
 \usepackage{textcomp, gensymb} % provides \degree symbol
+\usepackage{xcolor}   % For colored text
 
 \sisetup{
   table-align-text-post = false
 }
+
+% Define fine print environment
+\newenvironment{fineprint}
+  {\begin{quote}\footnotesize\color{gray}}
+  {\end{quote}}
 
 % Geometry Settings
 \geometry{margin=1in} % 1-inch margins

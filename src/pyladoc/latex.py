@@ -191,6 +191,7 @@ def from_html(html_code: str) -> str:
             self.header_flag = False
             self.attr_dict: dict[str, str] = {}
             self.equation_flag = False
+            self.class_name: str = ''
 
         def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
             self.attr_dict = {k: v if v else '' for k, v in attrs}
@@ -217,6 +218,10 @@ def from_html(html_code: str) -> str:
                 self.latex_code.append("\n\n\\noindent\\rule[0.5ex]{\\linewidth}{1pt}\n\n")
             elif tag == 'latex':
                 self.equation_flag = True
+            elif tag == 'div':
+                self.class_name = self.attr_dict.get('class', '')
+                if self.class_name:
+                    self.latex_code.append(f"\n\\begin{{{self.class_name}}}\n")
 
         def handle_endtag(self, tag: str) -> None:
             if tag in html_to_latex:
@@ -242,6 +247,9 @@ def from_html(html_code: str) -> str:
                 self.latex_code.append("}")
             elif tag == 'latex':
                 self.equation_flag = False
+            elif tag == 'div':
+                if self.class_name:
+                    self.latex_code.append(f"\n\\end{{{self.class_name}}}\n")
 
         def handle_data(self, data: str) -> None:
             if self.equation_flag:
