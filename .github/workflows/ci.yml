@@ -140,6 +140,7 @@ jobs:
         path: tests/out/test_*_render*.pdf
 
   build-docs:
+    if: github.event_name == 'push'
     needs: build-ubuntu
     runs-on: ubuntu-latest
     steps:
@@ -183,6 +184,7 @@ jobs:
           path: docs/build/html
 
   deploy:
+    if: github.event_name == 'push'
     needs: build-docs
     runs-on: ubuntu-latest
     permissions:
